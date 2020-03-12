@@ -1,6 +1,7 @@
 package cn.hotel.hotelserver.service;
 
 import cn.hotel.hotelserver.mapper.AdminMapper;
+import cn.hotel.hotelserver.model.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,10 @@ public class AdminService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return adminMapper.loadUserByUsername(username);
+        Admin admin = adminMapper.loadUserByUsername(username);
+        if (admin == null) {
+            throw new UsernameNotFoundException("用户名不存在");
+        }
+        return admin;
     }
 }
