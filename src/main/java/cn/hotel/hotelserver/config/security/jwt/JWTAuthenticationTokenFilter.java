@@ -1,0 +1,66 @@
+package cn.hotel.hotelserver.config.security.jwt;
+
+import cn.hotel.hotelserver.util.ResponseJson;
+import cn.hotel.hotelserver.util.ResponseVo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.AntPathMatcher;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * @author Johnson
+ * @date 2020/01/13/ 17:41:40
+ */
+public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
+
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
+        super(authenticationManager);
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // 获取请求头中JWT的Token
+        String tokenHeader = request.getHeader(JWTConfig.getTokenHeader());
+        if (tokenHeader == null || !tokenHeader.startsWith(JWTConfig.getTokenPrefix())) {
+            ResponseVo error = ResponseVo.error(1105, "没有token令牌, 请不要瞎搞");
+            ResponseJson.responseJson(response, error);
+            return;
+        }
+
+        // 截取JWT前缀
+        String token = tokenHeader.replace(JWTConfig.getTokenPrefix(), "");
+
+        try {
+            // 解析JWT
+            Claims claims = Jwts.parser()
+                    .setSigningKey(JWTConfig.getSecret())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            // 获取用户名和id
+            String username = claims.getSubject();
+            String userId = claims.getId();
+            if (StringUtils.isEmpty(username) || StringUtils.isEmpty(userId)) {
+                ResponseVo error = ResponseVo.error(1105,"非法令牌！拉你进黑名单啦！");
+                ResponseJson.responseJson(response, error);
+                return;
+            }
+        } catch (MalformedJwtException exception) {
+            ResponseVo error = ResponseVo.error(1105,"非法令牌！拉你进黑名单啦！");
+            ResponseJson.responseJson(response, error);
+        }
+
+        chain.doFilter(request, response);
+    }
+}

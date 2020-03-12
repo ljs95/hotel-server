@@ -19,4 +19,7 @@
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{nickname,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT})
   </insert>
+    <select id="loadUserByUsername" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from admin where username = #{username}
+    </select>
 </mapper>

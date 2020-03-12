@@ -4,3 +4,14 @@ spring:
     username: johnson
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
+
+# JWT配置
+jwt:
+  # 密匙KEY
+  secret: JWTSecret
+  # HeaderKEY
+  tokenHeader: X-TOKEN
+  # Token前缀字符
+  tokenPrefix: hotel-
+  # 过期时间 单位秒 1天后过期=86400 7天后过期=604800
+  expiration: 86400
