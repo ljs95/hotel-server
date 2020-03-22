@@ -1,4 +1,4 @@
-package cn.hotel.hotelserver.mapper;
+package cn.hotel.hotelserver.mapper.basic;
 
 import cn.hotel.hotelserver.model.basic.Role;
 

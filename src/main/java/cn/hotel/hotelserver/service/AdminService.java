@@ -1,7 +1,7 @@
 package cn.hotel.hotelserver.service;
 
-import cn.hotel.hotelserver.mapper.AdminMapper;
-import cn.hotel.hotelserver.mapper.RoleMapper;
+import cn.hotel.hotelserver.mapper.basic.AdminMapper;
+import cn.hotel.hotelserver.mapper.basic.RoleMapper;
 import cn.hotel.hotelserver.model.basic.Admin;
 import cn.hotel.hotelserver.model.basic.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
