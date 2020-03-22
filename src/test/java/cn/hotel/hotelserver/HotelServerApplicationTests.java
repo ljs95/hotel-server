@@ -1,7 +1,7 @@
 package cn.hotel.hotelserver;
 
 import cn.hotel.hotelserver.mapper.AdminMapper;
-import cn.hotel.hotelserver.model.Admin;
+import cn.hotel.hotelserver.model.basic.Admin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

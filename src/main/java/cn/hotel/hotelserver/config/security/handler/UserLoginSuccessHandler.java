@@ -1,7 +1,7 @@
 package cn.hotel.hotelserver.config.security.handler;
 
 import cn.hotel.hotelserver.config.security.jwt.JWTTokenUtil;
-import cn.hotel.hotelserver.model.Admin;
+import cn.hotel.hotelserver.model.basic.Admin;
 import cn.hotel.hotelserver.util.ResponseJson;
 import cn.hotel.hotelserver.util.ResponseVo;
 import org.springframework.security.core.Authentication;

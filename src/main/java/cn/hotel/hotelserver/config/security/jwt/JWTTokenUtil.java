@@ -1,6 +1,6 @@
 package cn.hotel.hotelserver.config.security.jwt;
 
-import cn.hotel.hotelserver.model.Admin;
+import cn.hotel.hotelserver.model.basic.Admin;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
