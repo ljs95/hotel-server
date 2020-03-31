@@ -1,5 +1,6 @@
 package cn.hotel.hotelserver.model.basic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +16,6 @@ import java.util.List;
  * @date 2020/3/22
  */
 public class Admin extends AbstractAdmin implements UserDetails {
-
-    private String password;
-
-    private Boolean enabled;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -41,36 +38,12 @@ public class Admin extends AbstractAdmin implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> roleList = new ArrayList<>(this.roles.size());
         for (Role role : this.roles) {
             roleList.add(new SimpleGrantedAuthority(role.getName()));
         }
         return roleList;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public String toString() {
-        return "Admin{" +
-                "password='" + password + '\'' +
-                ", enabled=" + enabled +
-                ", id=" + id +
-                ", username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", userImg='" + userImg + '\'' +
-                '}';
     }
 }

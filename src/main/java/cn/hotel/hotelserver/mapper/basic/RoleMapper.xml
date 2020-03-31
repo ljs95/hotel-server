@@ -9,7 +9,6 @@
     <insert id="insert" parameterType="cn.hotel.hotelserver.model.basic.Role">
         insert into Role(name, remark) values(#{name}, #{remark})
     </insert>
-
     <select id="getRolesByAdminId" resultMap="BaseResultMap">
         SELECT
             r.*

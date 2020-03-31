@@ -1,13 +1,18 @@
 package cn.hotel.hotelserver.controller.basic;
 
 import cn.hotel.hotelserver.model.basic.Admin;
+import cn.hotel.hotelserver.service.AdminService;
 import cn.hotel.hotelserver.util.ResponseVo;
 import cn.hotel.hotelserver.util.SecuritySessionUtil;
+import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
+import cn.hotel.hotelserver.vo.PaginationResult;
+import cn.hotel.hotelserver.vo.basic.AdminPagination;
 import cn.hotel.hotelserver.vo.basic.AdminVo;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author Johnson
@@ -17,11 +22,60 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/basic/admin")
 public class AdminController {
 
+    @Autowired
+    AdminService adminService;
+
     @GetMapping("/current")
     public ResponseVo current() {
         Admin admin = SecuritySessionUtil.getSessionAdmin();
         AdminVo adminVo = new AdminVo();
         BeanUtils.copyProperties(admin, adminVo);
         return ResponseVo.successData(adminVo);
+    }
+
+    @PostMapping("/table")
+    public ResponseVo table(@RequestBody AdminPagination limit) {
+        PaginationResult pagination = adminService.table(limit);
+        return ResponseVo.successData(pagination);
+    }
+
+    @PostMapping("/enabled")
+    public ResponseVo enabled(@RequestBody Map<String, String> map) {
+        Admin admin = new Admin();
+        admin.setId(Integer.valueOf(map.get("id")));
+        admin.setEnabled(Boolean.valueOf(map.get("enabled")));
+        adminService.update(admin);
+
+        return ResponseVo.success("更新成功");
+    }
+
+    @GetMapping("/find/{id}")
+    public ResponseVo find(@PathVariable Integer id) {
+        Admin admin = adminService.find(id);
+        return ResponseVo.successData(admin);
+    }
+
+    @PutMapping("/create")
+    public ResponseVo create(@RequestBody AdminVo adminVo) {
+        Admin admin = new Admin();
+        ColaBeanUtils.copyProperties(adminVo, admin);
+        adminService.create(admin);
+
+        return ResponseVo.success("添加成功");
+    }
+
+    @PostMapping("/update")
+    public ResponseVo update(@RequestBody AdminVo adminVo) {
+        Admin admin = new Admin();
+        ColaBeanUtils.copyProperties(adminVo, admin);
+        adminService.update(admin);
+        return ResponseVo.success("更新成功");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseVo delete(@PathVariable Integer id) {
+        adminService.delete(id);
+
+        return ResponseVo.success("删除成功");
     }
 }

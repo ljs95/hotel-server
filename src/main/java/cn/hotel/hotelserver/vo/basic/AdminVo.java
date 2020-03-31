@@ -8,4 +8,7 @@ import cn.hotel.hotelserver.model.basic.AbstractAdmin;
  */
 public class AdminVo extends AbstractAdmin {
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
 }

@@ -5,6 +5,7 @@ import cn.hotel.hotelserver.util.ResponseVo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -56,7 +57,7 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 ResponseJson.responseJson(response, error);
                 return;
             }
-        } catch (MalformedJwtException exception) {
+        } catch (MalformedJwtException | SignatureException exception) {
             ResponseVo error = ResponseVo.error(1105,"非法令牌！拉你进黑名单啦！");
             ResponseJson.responseJson(response, error);
         }

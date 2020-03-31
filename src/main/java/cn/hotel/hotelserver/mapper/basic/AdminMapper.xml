@@ -10,22 +10,72 @@
         <result column="user_img" property="userImg" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, username, password, nickname, enabled, user_img
+    id, username, nickname, enabled, user_img
+    </sql>
+    <sql id="Base_Column_List_Password">
+        <include refid="Base_Column_List"/>, password
     </sql>
 
     <insert id="insert" parameterType="cn.hotel.hotelserver.model.basic.Admin">
-        insert into admin (username, password,
-          nickname, enabled)
+        insert into admin(username, password,
+          nickname, enabled, user_img)
         values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-          #{nickname,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT})
+          #{nickname,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{userImg,jdbcType=VARCHAR})
     </insert>
+    <update id="update" parameterType="cn.hotel.hotelserver.model.basic.Admin">
+        update admin
+        <set>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="userImg != null">
+                user_img = #{userImg},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="Integer">
+        delete from admin where id = #{id}
+    </delete>
     <select id="loadUserByUsername" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List_Password"/>
         from admin where username = #{username}
     </select>
-
-    <resultMap id="RolesResutMap" type="cn.hotel.hotelserver.model.basic.Role">
-
-    </resultMap>
+    <sql id="tableSql">
+        select
+        <include refid="Base_Column_List"/>
+        from admin
+    </sql>
+    <select id="table" resultMap="BaseResultMap" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
+        <include refid="tableSql"/>
+        <where>
+            <if test="username != null and username != ''">
+                and username like CONCAT(#{username}, '%')
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname like CONCAT(#{nickname}, '%')
+            </if>
+            <if test="enabled != null">
+                and enabled = #{enabled}
+            </if>
+        </where>
+        limit #{page},#{size}
+    </select>
+    <select id="tableCount" resultType="java.lang.Integer" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
+        select count(1) from (
+        <include refid="tableSql"/>
+        ) as admin
+    </select>
+    <select id="find" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin where id = #{id}
+    </select>
 </mapper>
