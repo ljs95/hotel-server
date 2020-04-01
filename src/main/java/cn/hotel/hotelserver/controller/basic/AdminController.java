@@ -1,17 +1,21 @@
 package cn.hotel.hotelserver.controller.basic;
 
 import cn.hotel.hotelserver.model.basic.Admin;
+import cn.hotel.hotelserver.validates.ICreateValid;
 import cn.hotel.hotelserver.service.AdminService;
 import cn.hotel.hotelserver.util.ResponseVo;
 import cn.hotel.hotelserver.util.SecuritySessionUtil;
 import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
+import cn.hotel.hotelserver.validates.IUpdateValid;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import cn.hotel.hotelserver.vo.basic.AdminPagination;
 import cn.hotel.hotelserver.vo.basic.AdminVo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,9 +32,7 @@ public class AdminController {
     @GetMapping("/current")
     public ResponseVo current() {
         Admin admin = SecuritySessionUtil.getSessionAdmin();
-        AdminVo adminVo = new AdminVo();
-        BeanUtils.copyProperties(admin, adminVo);
-        return ResponseVo.successData(adminVo);
+        return ResponseVo.successData(admin);
     }
 
     @PostMapping("/table")
@@ -51,31 +53,34 @@ public class AdminController {
 
     @GetMapping("/find/{id}")
     public ResponseVo find(@PathVariable Integer id) {
-        Admin admin = adminService.find(id);
-        return ResponseVo.successData(admin);
+        Admin admin = adminService.findById(id);
+        AdminVo adminVo = new AdminVo();
+        ColaBeanUtils.copyProperties(admin, adminVo);
+
+        List<Integer> roleIds = new ArrayList<>(admin.getRoles().size());
+        admin.getRoles().forEach((role -> {
+            roleIds.add(role.getId());
+        }));
+
+        adminVo.setRoleIds(roleIds);
+        return ResponseVo.successData(adminVo);
     }
 
     @PutMapping("/create")
-    public ResponseVo create(@RequestBody AdminVo adminVo) {
-        Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
-        adminService.create(admin);
-
+    public ResponseVo create(@RequestBody @Validated(value = {ICreateValid.class}) AdminVo adminVo) {
+        adminService.create(adminVo);
         return ResponseVo.success("添加成功");
     }
 
-    @PostMapping("/update")
-    public ResponseVo update(@RequestBody AdminVo adminVo) {
-        Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
-        adminService.update(admin);
+    @PostMapping(value = "/update")
+    public ResponseVo update(@RequestBody @Validated(value = {IUpdateValid.class}) AdminVo adminVo) {
+        adminService.updateAndRole(adminVo);
         return ResponseVo.success("更新成功");
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseVo delete(@PathVariable Integer id) {
         adminService.delete(id);
-
         return ResponseVo.success("删除成功");
     }
 }

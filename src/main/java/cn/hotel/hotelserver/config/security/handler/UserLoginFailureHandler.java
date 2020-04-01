@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 登录失败处理器
+ *
+ * @author Johnson
+ * @date 2020/4/1
+ */
 @Component
 public class UserLoginFailureHandler implements AuthenticationFailureHandler {
     @Override

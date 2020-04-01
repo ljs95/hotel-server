@@ -15,12 +15,17 @@
     <sql id="Base_Column_List_Password">
         <include refid="Base_Column_List"/>, password
     </sql>
-
-    <insert id="insert" parameterType="cn.hotel.hotelserver.model.basic.Admin">
+    <insert id="insert" parameterType="cn.hotel.hotelserver.model.basic.Admin" useGeneratedKeys="true" keyProperty="id">
         insert into admin(username, password,
           nickname, enabled, user_img)
         values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
           #{nickname,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{userImg,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertAdminRole" parameterType="Map">
+        insert into admin_role(aid, rid) values
+        <foreach collection="roleIds" separator="," item="roleId">
+            (#{adminId},#{roleId})
+        </foreach>
     </insert>
     <update id="update" parameterType="cn.hotel.hotelserver.model.basic.Admin">
         update admin
@@ -42,6 +47,9 @@
     </update>
     <delete id="delete" parameterType="Integer">
         delete from admin where id = #{id}
+    </delete>
+    <delete id="deleteAdminRole" parameterType="integer">
+        delete from admin_role where aid = #{id}
     </delete>
     <select id="loadUserByUsername" resultMap="BaseResultMap">
         select
@@ -68,12 +76,13 @@
         </where>
         limit #{page},#{size}
     </select>
-    <select id="tableCount" resultType="java.lang.Integer" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
+    <select id="tableCount" resultType="java.lang.Integer"
+            parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
         select count(1) from (
         <include refid="tableSql"/>
         ) as admin
     </select>
-    <select id="find" resultMap="BaseResultMap">
+    <select id="findById" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from admin where id = #{id}

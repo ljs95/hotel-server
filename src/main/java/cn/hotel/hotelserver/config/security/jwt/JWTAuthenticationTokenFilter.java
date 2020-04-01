@@ -2,10 +2,7 @@ package cn.hotel.hotelserver.config.security.jwt;
 
 import cn.hotel.hotelserver.util.ResponseJson;
 import cn.hotel.hotelserver.util.ResponseVo;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -57,9 +54,14 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 ResponseJson.responseJson(response, error);
                 return;
             }
+        } catch (ExpiredJwtException exception) {
+            ResponseVo error = ResponseVo.error(1105,"token访问令牌已过期，请重新登录");
+            ResponseJson.responseJson(response, error);
+            return;
         } catch (MalformedJwtException | SignatureException exception) {
             ResponseVo error = ResponseVo.error(1105,"非法令牌！拉你进黑名单啦！");
             ResponseJson.responseJson(response, error);
+            return;
         }
 
         chain.doFilter(request, response);

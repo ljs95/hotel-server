@@ -15,6 +15,9 @@ import java.io.IOException;
 
 /**
  * 登录成功处理器
+ *
+ * @author Johnson
+ * @date 2020/4/1
  */
 @Component
 public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {

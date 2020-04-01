@@ -1,8 +1,10 @@
-package cn.hotel.hotelserver.model.basic;
+package cn.hotel.hotelserver.model.basic.abstracts;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import cn.hotel.hotelserver.model.basic.Role;
+import cn.hotel.hotelserver.validates.ICreateValid;
+import cn.hotel.hotelserver.validates.IUpdateValid;
+
+import javax.validation.constraints.*;
 import java.util.List;
 
 /**
@@ -11,24 +13,21 @@ import java.util.List;
  */
 public abstract class AbstractAdmin {
 
+    @NotNull(groups = {IUpdateValid.class}, message = "id不能为空")
     protected Integer id;
 
-    @Size(min = 6, max = 16, message = "用户名长度为6-16位")
-    @NotNull
+    @Size(groups = {ICreateValid.class, IUpdateValid.class}, min = 4, max = 16, message = "用户名长度为4-16位")
+    @NotBlank(groups = {ICreateValid.class, IUpdateValid.class})
     protected String username;
 
-    @NotNull
-    @Max(value = 20, message = "昵称最大长度为20")
-    protected String password;
-
-    @NotNull
+    @NotBlank(groups = {ICreateValid.class, IUpdateValid.class}, message = "昵称不能为空")
     protected String nickname;
 
     protected String userImg;
 
     protected List<Role> roles;
 
-    @NotNull
+    @NotNull(groups = {ICreateValid.class, IUpdateValid.class})
     protected Boolean enabled;
 
     public Integer getId() {
@@ -45,14 +44,6 @@ public abstract class AbstractAdmin {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getNickname() {

@@ -1,17 +1,21 @@
 package cn.hotel.hotelserver.vo;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Johnson
  * @date 2020/03/31/ 15:16:16
  */
 public class Pagination {
 
+    @NotNull(message = "页数不能为空")
     private Integer page;
 
+    @NotNull(message = "查询大小不能为空")
     private Integer size;
 
     public Integer getPage() {
-        return (page - 1) * size;
+        return page > 1 ? (page - 1) * size : 0;
     }
 
     public void setPage(Integer page) {

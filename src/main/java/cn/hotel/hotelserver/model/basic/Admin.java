@@ -1,5 +1,6 @@
 package cn.hotel.hotelserver.model.basic;
 
+import cn.hotel.hotelserver.model.basic.abstracts.AbstractAdmin;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,18 @@ import java.util.List;
  * @date 2020/3/22
  */
 public class Admin extends AbstractAdmin implements UserDetails {
+
+    private String password;
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
