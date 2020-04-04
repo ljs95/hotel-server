@@ -2,8 +2,8 @@ package cn.hotel.hotelserver.controller.basic;
 
 import cn.hotel.hotelserver.model.basic.Menu;
 import cn.hotel.hotelserver.model.basic.Role;
-import cn.hotel.hotelserver.service.MenuService;
-import cn.hotel.hotelserver.service.RoleService;
+import cn.hotel.hotelserver.service.basic.MenuService;
+import cn.hotel.hotelserver.service.basic.RoleService;
 import cn.hotel.hotelserver.util.ResponseVo;
 import cn.hotel.hotelserver.util.SecuritySessionUtil;
 import cn.hotel.hotelserver.util.bean.ColaBeanUtils;

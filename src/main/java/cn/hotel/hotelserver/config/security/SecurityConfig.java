@@ -5,7 +5,7 @@ import cn.hotel.hotelserver.config.security.handler.UserLoginFailureHandler;
 import cn.hotel.hotelserver.config.security.handler.UserLoginSuccessHandler;
 import cn.hotel.hotelserver.config.security.handler.UserLogoutSuccessHandler;
 import cn.hotel.hotelserver.config.security.jwt.JWTAuthenticationTokenFilter;
-import cn.hotel.hotelserver.service.AdminService;
+import cn.hotel.hotelserver.service.basic.AdminService;
 import cn.hotel.hotelserver.util.upload.UploadProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
