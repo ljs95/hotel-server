@@ -70,4 +70,17 @@ public interface RoleMapper {
      * @param id
      */
     void deleteAdminRoleByRoleId(Integer id);
+
+    /**
+     * 删除角色权限
+     * @param roleId
+     */
+    void deletePermission(Integer roleId);
+
+    /**
+     * 添加角色权限
+     * @param id
+     * @param permissionIds
+     */
+    void insertPermission(Integer id, List<Integer> permissionIds);
 }

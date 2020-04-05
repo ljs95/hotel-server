@@ -4,10 +4,8 @@ import cn.hotel.hotelserver.mapper.basic.AdminMapper;
 import cn.hotel.hotelserver.mapper.basic.RoleMapper;
 import cn.hotel.hotelserver.model.basic.Admin;
 import cn.hotel.hotelserver.model.basic.Role;
-import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import cn.hotel.hotelserver.vo.basic.AdminPagination;
-import cn.hotel.hotelserver.vo.basic.AdminVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,12 +54,10 @@ public class AdminService implements UserDetailsService {
 
     /**
      * 创建管理员
-     * @param adminVo
+     * @param admin
+     * @param roleIds
      */
-    public void create(AdminVo adminVo) {
-        Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
-
+    public void create(Admin admin, List<Integer> roleIds) {
         // 密码加密
         String newPassword = encodePassword(admin.getPassword());
         admin.setPassword(newPassword);
@@ -70,7 +66,7 @@ public class AdminService implements UserDetailsService {
         adminMapper.insert(admin);
 
         // 添加管理员角色
-        adminMapper.insertAdminRole(admin.getId(), adminVo.getRoleIds());
+        adminMapper.insertAdminRole(admin.getId(), roleIds);
     }
 
     /**
@@ -88,13 +84,11 @@ public class AdminService implements UserDetailsService {
 
     /**
      * 更新管理员信息和角色
-     * @param adminVo
+     * @param admin
+     * @param roleIds
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateAndRole(AdminVo adminVo) {
-        Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
-
+    public void updateAndRole(Admin admin, List<Integer> roleIds) {
         // 更新用户信息
         update(admin);
 
@@ -102,8 +96,8 @@ public class AdminService implements UserDetailsService {
         adminMapper.deleteAdminRole(admin.getId());
 
         // 添加用户角色
-        if (!adminVo.getRoleIds().isEmpty()) {
-            adminMapper.insertAdminRole(admin.getId(), adminVo.getRoleIds());
+        if (!roleIds.isEmpty()) {
+            adminMapper.insertAdminRole(admin.getId(), roleIds);
         }
     }
 

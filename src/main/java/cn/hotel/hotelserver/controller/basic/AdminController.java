@@ -68,13 +68,17 @@ public class AdminController {
 
     @PutMapping("/create")
     public ResponseVo create(@RequestBody @Validated(value = {ICreateValid.class}) AdminVo adminVo) {
-        adminService.create(adminVo);
+        Admin admin = new Admin();
+        ColaBeanUtils.copyProperties(adminVo, admin);
+        adminService.create(admin, adminVo.getRoleIds());
         return ResponseVo.success("添加成功");
     }
 
     @PostMapping(value = "/update")
     public ResponseVo update(@RequestBody @Validated(value = {IUpdateValid.class}) AdminVo adminVo) {
-        adminService.updateAndRole(adminVo);
+        Admin admin = new Admin();
+        ColaBeanUtils.copyProperties(adminVo, admin);
+        adminService.updateAndRole(admin, adminVo.getRoleIds());
         return ResponseVo.success("更新成功");
     }
 

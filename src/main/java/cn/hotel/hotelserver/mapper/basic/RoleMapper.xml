@@ -13,6 +13,12 @@
     <insert id="insert" parameterType="cn.hotel.hotelserver.model.basic.Role" useGeneratedKeys="true" keyProperty="id">
         insert into role(name, alias, remark) values(#{name}, #{alias}, #{remark})
     </insert>
+    <insert id="insertPermission" parameterType="map">
+        insert into role_permission(rid, pid) values
+        <foreach collection="permissionIds" item="permissionId" separator=",">
+            (#{id}, #{permissionId})
+        </foreach>
+    </insert>
     <update id="update" parameterType="cn.hotel.hotelserver.model.basic.Role">
         update role
         <set>
@@ -33,6 +39,9 @@
     </delete>
     <delete id="deleteAdminRoleByRoleId" parameterType="integer">
         delete from admin_role where rid = #{id}
+    </delete>
+    <delete id="deletePermission" parameterType="integer">
+        delete from role_permission where rid = #{roleId}
     </delete>
     <select id="getRolesByAdminId" resultMap="BaseResultMap">
         SELECT

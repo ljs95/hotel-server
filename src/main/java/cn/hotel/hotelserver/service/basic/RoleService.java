@@ -1,6 +1,8 @@
 package cn.hotel.hotelserver.service.basic;
 
+import cn.hotel.hotelserver.mapper.basic.PermissionMapper;
 import cn.hotel.hotelserver.mapper.basic.RoleMapper;
+import cn.hotel.hotelserver.model.basic.Permission;
 import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import cn.hotel.hotelserver.vo.basic.RolePagination;
@@ -19,6 +21,9 @@ public class RoleService {
 
     @Autowired
     RoleMapper roleMapper;
+
+    @Autowired
+    PermissionMapper permissionMapper;
 
     public PaginationResult table(RolePagination pagination) {
         List<Role> roles = roleMapper.table(pagination);
@@ -49,5 +54,15 @@ public class RoleService {
 
         // 删除角色
         roleMapper.delete(id);
+    }
+
+    public List<Permission> permissions(Integer id) {
+        return permissionMapper.selectByRoleId(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePermission(Integer id, List<Integer> permissionIds) {
+        roleMapper.deletePermission(id);
+        roleMapper.insertPermission(id, permissionIds);
     }
 }

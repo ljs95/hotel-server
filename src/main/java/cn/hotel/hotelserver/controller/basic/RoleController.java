@@ -1,8 +1,10 @@
 package cn.hotel.hotelserver.controller.basic;
 
 import cn.hotel.hotelserver.model.basic.Menu;
+import cn.hotel.hotelserver.model.basic.Permission;
 import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.service.basic.MenuService;
+import cn.hotel.hotelserver.service.basic.PermissionService;
 import cn.hotel.hotelserver.service.basic.RoleService;
 import cn.hotel.hotelserver.util.ResponseVo;
 import cn.hotel.hotelserver.util.SecuritySessionUtil;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色控制器
@@ -34,6 +37,9 @@ public class RoleController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    PermissionService permissionService;
 
     /**
      * 获取角色菜单路由
@@ -83,5 +89,25 @@ public class RoleController {
     public ResponseVo delete(@PathVariable Integer id) {
         roleService.delete(id);
         return ResponseVo.success("删除成功");
+    }
+
+    @GetMapping("/permissions/{id}")
+    public ResponseVo permissions(@PathVariable Integer id) {
+        List<Permission> permissions = roleService.permissions(id);
+        return ResponseVo.successData(permissions);
+    }
+
+    @PostMapping("/editPermission")
+    public ResponseVo editPermission(@RequestBody Map<String, Object> param) {
+        Integer id = (Integer)param.get("id");
+        List<Integer> permissionIds = (List<Integer>) param.get("permissionIds");
+        roleService.updatePermission(id, permissionIds);
+        return ResponseVo.success("更新成功");
+    }
+
+    @GetMapping("/permissionTree")
+    public ResponseVo treeData() {
+        List<Permission> permissionList = permissionService.treeData(true);
+        return ResponseVo.successData(permissionList);
     }
 }
