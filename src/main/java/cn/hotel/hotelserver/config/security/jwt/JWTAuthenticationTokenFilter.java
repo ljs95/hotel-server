@@ -6,7 +6,6 @@ import io.jsonwebtoken.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,8 +18,6 @@ import java.io.IOException;
  * @date 2020/01/13/ 17:41:40
  */
 public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
-
-    private AntPathMatcher pathMatcher = new AntPathMatcher();
 
     public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);

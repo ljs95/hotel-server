@@ -20,4 +20,8 @@ public interface PermissionMapper {
     List<Permission> all(Boolean enabled);
 
     List<Permission> selectByRoleId(Integer roleId);
+
+    List<Permission> selectPermissionByRoleIds(List<Integer> roleIds);
+
+    Permission getPermissionWithRolesByUrl(String url);
 }

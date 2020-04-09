@@ -1,7 +1,9 @@
 package cn.hotel.hotelserver.controller.basic;
 
 import cn.hotel.hotelserver.model.basic.Admin;
+import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.service.basic.AdminService;
+import cn.hotel.hotelserver.service.basic.RoleService;
 import cn.hotel.hotelserver.util.ResponseVo;
 import cn.hotel.hotelserver.util.SecuritySessionUtil;
 import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
@@ -15,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,10 +32,28 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    RoleService roleService;
+
     @GetMapping("/current")
     public ResponseVo current() {
         Admin admin = SecuritySessionUtil.getSessionAdmin();
-        return ResponseVo.successData(admin);
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", admin.getUsername());
+        map.put("nickname", admin.getNickname());
+        map.put("userImg", admin.getUserImg());
+
+        List<String> roleNames = new ArrayList<>(admin.getRoles().size());
+        List<Integer> roleIds = new ArrayList<>(admin.getRoles().size());
+        for (Role role : admin.getRoles()) {
+
+            roleIds.add(role.getId());
+            roleNames.add(role.getName());
+        }
+        map.put("roles", roleNames);
+        List<String> permissions = roleService.selectPermissionUrlByIds(roleIds);
+        map.put("permissions", permissions);
+        return ResponseVo.successData(map);
     }
 
     @PostMapping("/table")

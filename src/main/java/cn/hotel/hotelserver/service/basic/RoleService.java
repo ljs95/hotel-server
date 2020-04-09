@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +64,17 @@ public class RoleService {
     @Transactional(rollbackFor = Exception.class)
     public void updatePermission(Integer id, List<Integer> permissionIds) {
         roleMapper.deletePermission(id);
-        roleMapper.insertPermission(id, permissionIds);
+        if (!permissionIds.isEmpty()) {
+            roleMapper.insertPermission(id, permissionIds);
+        }
+    }
+
+    public List<String> selectPermissionUrlByIds(List<Integer> roleIds) {
+        List<Permission> permissionList = permissionMapper.selectPermissionByRoleIds(roleIds);
+        List<String> urls = new ArrayList<>(permissionList.size());
+        permissionList.forEach((permission -> {
+            urls.add(permission.getUrl());
+        }));
+        return urls;
     }
 }

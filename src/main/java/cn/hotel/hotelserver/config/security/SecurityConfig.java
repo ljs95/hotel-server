@@ -10,18 +10,26 @@ import cn.hotel.hotelserver.util.upload.UploadProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    CustomFilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
+
+    @Autowired
+    CustomUrlDecisionManager urlDecisionManager;
 
     @Autowired
     UserLoginSuccessHandler userLoginSuccessHandler;
@@ -53,7 +61,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest().authenticated() //全部请求都需要严重
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
+                        object.setAccessDecisionManager(urlDecisionManager);
+                        return object;
+                    }
+                }) //全部请求都需要身份验证
                 .and()
                 .formLogin()
                 .usernameParameter("username")
@@ -61,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/doLogin")
                 .successHandler(userLoginSuccessHandler)
                 .failureHandler(userLoginFailureHandler)
+                .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessHandler(userLogoutSuccessHandler)
@@ -68,6 +84,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 //请求失败处理回调
                 .authenticationEntryPoint(authenticationFailureHandler)
+                .and()
+                // 开启跨域
+                .cors()
                 .and()
                 .csrf().disable(); //关闭csrf，让postman可以调试
 

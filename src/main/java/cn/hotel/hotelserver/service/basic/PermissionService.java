@@ -42,4 +42,8 @@ public class PermissionService {
     public void delete(Integer id) {
         permissionMapper.deleteByPrimaryKey(id);
     }
+
+    public Permission getPermissionWithRolesByUrl(String url) {
+        return permissionMapper.getPermissionWithRolesByUrl(url);
+    }
 }

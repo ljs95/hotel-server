@@ -23,7 +23,7 @@
     <if test="enabled != null">
       where enabled = #{enabled}
     </if>
-    order by list_order
+    order by list_order, id
   </select>
   <select id="selectByRoleId" resultMap="BaseResultMap">
     SELECT
@@ -42,7 +42,37 @@
     ORDER BY
         list_order
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="selectPermissionByRoleIds" parameterType="collection" resultMap="BaseResultMap">
+    select distinct p.* from(select p.* from permission as p, role_permission rp where p.id = rp.pid and rp.rid in
+    <foreach collection="list" item="roleId" open="(" separator=","  close=")">
+      #{roleId}
+    </foreach>
+    order by p.list_order) as p
+  </select>
+  <resultMap id="withRoleMap" type="cn.hotel.hotelserver.model.basic.Permission" extends="BaseResultMap">
+    <collection property="roles" ofType="cn.hotel.hotelserver.model.basic.Role">
+      <id column="rid" property="id" javaType="INTEGER"/>
+      <result column="rname" property="name" jdbcType="VARCHAR"/>
+      <result column="ralias" property="alias" jdbcType="VARCHAR"/>
+      <result column="rremark" property="remark" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+  <select id="getPermissionWithRolesByUrl" parameterType="string" resultMap="withRoleMap">
+    SELECT
+        p.*,
+        r.id AS rid,
+        r.NAME AS rname,
+        r.alias AS ralias,
+        r.remark AS rremark
+    FROM
+        permission p
+        LEFT JOIN role_permission rp ON p.id = rp.pid
+        LEFT JOIN role r ON rp.rid = r.id
+    WHERE
+        p.enabled = '1'
+        AND p.url = #{url}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from permission
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -118,4 +148,5 @@
       list_order = #{listOrder,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>
