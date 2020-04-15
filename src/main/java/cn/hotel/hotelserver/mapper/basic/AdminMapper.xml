@@ -56,22 +56,40 @@
         <include refid="Base_Column_List_Password"/>
         from admin where username = #{username}
     </select>
+    <resultMap id="withRoleMap" type="cn.hotel.hotelserver.model.basic.Admin" extends="BaseResultMap">
+        <collection property="roles" ofType="cn.hotel.hotelserver.model.basic.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="ralias" property="alias"/>
+            <result column="rremark" property="remark"/>
+        </collection>
+    </resultMap>
     <sql id="tableSql">
-        select
-        <include refid="Base_Column_List"/>
-        from admin
+        SELECT
+            a.*,
+            r.id AS rid,
+            r.NAME AS rname,
+            r.alias AS ralias,
+            r.remark AS rremark
+        FROM
+            admin AS a,
+            admin_role AS ar,
+            role AS r
+        WHERE
+            a.id = ar.aid
+            AND ar.rid = r.id
     </sql>
-    <select id="table" resultMap="BaseResultMap" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
+    <select id="table" resultMap="withRoleMap" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
         <include refid="tableSql"/>
         <where>
             <if test="username != null and username != ''">
-                and username like CONCAT(#{username}, '%')
+                and a.username like CONCAT(#{username}, '%')
             </if>
             <if test="nickname != null and nickname != ''">
-                and nickname like CONCAT(#{nickname}, '%')
+                and a.nickname like CONCAT(#{nickname}, '%')
             </if>
             <if test="enabled != null">
-                and enabled = #{enabled}
+                and a.enabled = #{enabled}
             </if>
         </where>
         limit #{page},#{size}
