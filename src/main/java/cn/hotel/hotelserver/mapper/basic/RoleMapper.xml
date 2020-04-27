@@ -55,25 +55,18 @@
             AND ar.rid = r.id
             AND a.id = #{adminId}
     </select>
-    <sql id="tableSql">
+    <select id="table" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from role
-    </sql>
-    <select id="table" resultMap="BaseResultMap" parameterType="cn.hotel.hotelserver.vo.basic.RolePagination">
-        <include refid="tableSql"/>
         <where>
-            <if test="name != null and name != ''">
-                and name like CONCAT(#{name}, '%')
+            <if test="pagination.name != null and pagination.name != ''">
+                and name like CONCAT(#{pagination.name}, '%')
             </if>
-            <if test="alias != null and alias != ''">
-                and alias like CONCAT(#{alias}, '%')
+            <if test="pagination.alias != null and pagination.alias != ''">
+                and alias like CONCAT(#{pagination.alias}, '%')
             </if>
         </where>
-        limit #{page},#{size}
-    </select>
-    <select id="tableCount" resultType="java.lang.Integer" parameterType="cn.hotel.hotelserver.vo.basic.RolePagination">
-        select count(1) from (<include refid="tableSql"/>) as role
     </select>
     <select id="findById" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from role where id = #{id}

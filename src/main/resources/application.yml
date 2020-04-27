@@ -5,6 +5,13 @@ spring:
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
 
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 # JWT配置
 jwt:
   # 密匙KEY

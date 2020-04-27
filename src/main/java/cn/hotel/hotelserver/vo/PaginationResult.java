@@ -7,16 +7,16 @@ package cn.hotel.hotelserver.vo;
  */
 public class PaginationResult {
 
-    private Integer count;
+    private Long count;
 
     private Object data;
 
-    public PaginationResult(Integer count, Object object) {
+    public PaginationResult(Long count, Object object) {
         this.count = count;
         this.data = object;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 

@@ -64,7 +64,7 @@
             <result column="rremark" property="remark"/>
         </collection>
     </resultMap>
-    <sql id="tableSql">
+    <select id="table" resultMap="withRoleMap">
         SELECT
             a.*,
             r.id AS rid,
@@ -78,27 +78,15 @@
         WHERE
             a.id = ar.aid
             AND ar.rid = r.id
-    </sql>
-    <select id="table" resultMap="withRoleMap" parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
-        <include refid="tableSql"/>
-        <where>
-            <if test="username != null and username != ''">
-                and a.username like CONCAT(#{username}, '%')
-            </if>
-            <if test="nickname != null and nickname != ''">
-                and a.nickname like CONCAT(#{nickname}, '%')
-            </if>
-            <if test="enabled != null">
-                and a.enabled = #{enabled}
-            </if>
-        </where>
-        limit #{page},#{size}
-    </select>
-    <select id="tableCount" resultType="java.lang.Integer"
-            parameterType="cn.hotel.hotelserver.vo.basic.AdminPagination">
-        select count(1) from (
-        <include refid="tableSql"/>
-        ) as admin
+        <if test="pagination.username != null and pagination.username != ''">
+            and a.username like CONCAT(#{pagination.username}, '%')
+        </if>
+        <if test="pagination.nickname != null and pagination.nickname != ''">
+            and a.nickname like CONCAT(#{pagination.nickname}, '%')
+        </if>
+        <if test="pagination.enabled != null">
+            and a.enabled = #{pagination.enabled}
+        </if>
     </select>
     <select id="findById" resultMap="BaseResultMap">
         select

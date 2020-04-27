@@ -14,6 +14,13 @@ public class Pagination {
     @NotNull(message = "查询大小不能为空")
     private Integer size;
 
+    public Pagination(){}
+
+    public Pagination(Integer page, Integer size) {
+        this.page = page;
+        this.size = size;
+    }
+
     public Integer getPage() {
         return page > 1 ? (page - 1) * size : 0;
     }

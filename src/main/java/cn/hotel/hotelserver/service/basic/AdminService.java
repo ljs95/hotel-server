@@ -6,6 +6,8 @@ import cn.hotel.hotelserver.model.basic.Admin;
 import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import cn.hotel.hotelserver.vo.basic.AdminPagination;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,10 +48,9 @@ public class AdminService implements UserDetailsService {
      * @author Johnson
      */
     public PaginationResult table(AdminPagination pagination) {
-        List<Admin> table = adminMapper.table(pagination);
-        Integer count = adminMapper.tableCount(pagination);
-
-        return new PaginationResult(count, table);
+        Page<Admin> adminPage = new Page<>(pagination.getPage(),pagination.getSize());
+        IPage<Admin> table = adminMapper.table(adminPage, pagination);
+        return new PaginationResult(table.getTotal(), table.getRecords());
     }
 
     /**
