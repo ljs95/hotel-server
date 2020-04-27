@@ -5,9 +5,8 @@ import cn.hotel.hotelserver.mapper.basic.RoleMapper;
 import cn.hotel.hotelserver.model.basic.Admin;
 import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.vo.PaginationResult;
-import cn.hotel.hotelserver.vo.basic.AdminPagination;
+import cn.hotel.hotelserver.vo.basic.AdminPage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,9 +46,8 @@ public class AdminService implements UserDetailsService {
      * 分页查询
      * @author Johnson
      */
-    public PaginationResult table(AdminPagination pagination) {
-        Page<Admin> adminPage = new Page<>(pagination.getPage(),pagination.getSize());
-        IPage<Admin> table = adminMapper.table(adminPage, pagination);
+    public PaginationResult table(AdminPage pagination) {
+        IPage<Admin> table = adminMapper.table(pagination);
         return new PaginationResult(table.getTotal(), table.getRecords());
     }
 

@@ -1,9 +1,8 @@
 package cn.hotel.hotelserver.mapper.basic;
 
 import cn.hotel.hotelserver.model.basic.Role;
-import cn.hotel.hotelserver.vo.basic.RolePagination;
+import cn.hotel.hotelserver.vo.basic.RolePage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 
@@ -30,10 +29,10 @@ public interface RoleMapper {
 
     /**
      * 分页查询
-     * @param pagination
-     * @return List
+     * @param page
+     * @return IPage<Role>
      */
-    IPage<Role> table(Page<Role> page, RolePagination pagination);
+    IPage<Role> table(RolePage page);
 
     /**
      * 根据id查询角色

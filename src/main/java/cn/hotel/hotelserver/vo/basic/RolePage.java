@@ -1,13 +1,14 @@
 package cn.hotel.hotelserver.vo.basic;
 
-import cn.hotel.hotelserver.vo.Pagination;
+import cn.hotel.hotelserver.model.basic.Role;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * 角色分页查询类
  * @author Johnson
  * @date 2020/04/01/ 09:27:02
  */
-public class RolePagination extends Pagination {
+public class RolePage extends Page<Role> {
 
     private String name;
 

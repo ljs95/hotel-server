@@ -10,7 +10,7 @@ import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
 import cn.hotel.hotelserver.validates.ICreateValid;
 import cn.hotel.hotelserver.validates.IUpdateValid;
 import cn.hotel.hotelserver.vo.PaginationResult;
-import cn.hotel.hotelserver.vo.basic.AdminPagination;
+import cn.hotel.hotelserver.vo.basic.AdminPage;
 import cn.hotel.hotelserver.vo.basic.AdminVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +57,7 @@ public class AdminController {
     }
 
     @PostMapping("/table")
-    public ResponseVo table(@RequestBody AdminPagination limit) {
+    public ResponseVo table(@RequestBody AdminPage limit) {
         PaginationResult pagination = adminService.table(limit);
         return ResponseVo.successData(pagination);
     }

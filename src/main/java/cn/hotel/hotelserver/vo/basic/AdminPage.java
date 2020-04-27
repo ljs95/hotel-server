@@ -1,12 +1,13 @@
 package cn.hotel.hotelserver.vo.basic;
 
-import cn.hotel.hotelserver.vo.Pagination;
+import cn.hotel.hotelserver.model.basic.Admin;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * @author Johnson
  * @date 2020/03/31/ 15:17:08
  */
-public class AdminPagination extends Pagination {
+public class AdminPage extends Page<Admin> {
 
     private String username;
 

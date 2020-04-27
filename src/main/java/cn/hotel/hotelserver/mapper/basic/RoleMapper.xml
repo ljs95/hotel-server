@@ -60,11 +60,11 @@
         <include refid="Base_Column_List"/>
         from role
         <where>
-            <if test="pagination.name != null and pagination.name != ''">
-                and name like CONCAT(#{pagination.name}, '%')
+            <if test="name != null and name != ''">
+                and name like CONCAT(#{name}, '%')
             </if>
-            <if test="pagination.alias != null and pagination.alias != ''">
-                and alias like CONCAT(#{pagination.alias}, '%')
+            <if test="alias != null and alias != ''">
+                and alias like CONCAT(#{alias}, '%')
             </if>
         </where>
     </select>

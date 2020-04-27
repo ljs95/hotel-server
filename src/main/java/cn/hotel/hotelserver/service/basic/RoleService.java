@@ -5,9 +5,8 @@ import cn.hotel.hotelserver.mapper.basic.RoleMapper;
 import cn.hotel.hotelserver.model.basic.Permission;
 import cn.hotel.hotelserver.model.basic.Role;
 import cn.hotel.hotelserver.vo.PaginationResult;
-import cn.hotel.hotelserver.vo.basic.RolePagination;
+import cn.hotel.hotelserver.vo.basic.RolePage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +27,8 @@ public class RoleService {
     @Autowired
     PermissionMapper permissionMapper;
 
-    public PaginationResult table(RolePagination pagination) {
-        Page<Role> rolePage = new Page<>(pagination.getPage(),pagination.getSize());
-        IPage<Role> table = roleMapper.table(rolePage, pagination);
+    public PaginationResult table(RolePage rolePage) {
+        IPage<Role> table = roleMapper.table(rolePage);
 
         return new PaginationResult(table.getTotal(), table.getRecords());
     }

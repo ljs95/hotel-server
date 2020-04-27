@@ -1,9 +1,8 @@
 package cn.hotel.hotelserver.mapper.basic;
 
 import cn.hotel.hotelserver.model.basic.Admin;
-import cn.hotel.hotelserver.vo.basic.AdminPagination;
+import cn.hotel.hotelserver.vo.basic.AdminPage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 
@@ -30,10 +29,10 @@ public interface AdminMapper {
 
     /**
      * 分页查询
-     * @param pagination
+     * @param page
      * @return
      */
-    IPage<Admin> table(Page<Admin> page, AdminPagination pagination);
+    IPage<Admin> table(AdminPage page);
 
     /**
      * 更新管理员

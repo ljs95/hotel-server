@@ -12,7 +12,7 @@ import cn.hotel.hotelserver.util.bean.ColaBeanUtils;
 import cn.hotel.hotelserver.validates.ICreateValid;
 import cn.hotel.hotelserver.validates.IUpdateValid;
 import cn.hotel.hotelserver.vo.PaginationResult;
-import cn.hotel.hotelserver.vo.basic.RolePagination;
+import cn.hotel.hotelserver.vo.basic.RolePage;
 import cn.hotel.hotelserver.vo.basic.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -58,7 +58,7 @@ public class RoleController {
     }
 
     @PostMapping("/table")
-    public ResponseVo table(@RequestBody @Valid RolePagination pagination) {
+    public ResponseVo table(@RequestBody @Valid RolePage pagination) {
         PaginationResult result = roleService.table(pagination);
         return ResponseVo.successData(result);
     }

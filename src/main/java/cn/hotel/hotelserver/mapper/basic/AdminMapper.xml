@@ -78,14 +78,14 @@
         WHERE
             a.id = ar.aid
             AND ar.rid = r.id
-        <if test="pagination.username != null and pagination.username != ''">
-            and a.username like CONCAT(#{pagination.username}, '%')
+        <if test="username != null and username != ''">
+            and a.username like CONCAT(#{username}, '%')
         </if>
-        <if test="pagination.nickname != null and pagination.nickname != ''">
-            and a.nickname like CONCAT(#{pagination.nickname}, '%')
+        <if test="nickname != null and nickname != ''">
+            and a.nickname like CONCAT(#{nickname}, '%')
         </if>
-        <if test="pagination.enabled != null">
-            and a.enabled = #{pagination.enabled}
+        <if test="enabled != null">
+            and a.enabled = #{enabled}
         </if>
     </select>
     <select id="findById" resultMap="BaseResultMap">
