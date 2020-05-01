@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hotel.hotelserver.mapper.room.RoomTypeMapper" >
+  <resultMap id="BaseResultMap" type="cn.hotel.hotelserver.model.room.RoomType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="spec_id" property="specId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, number, spec_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from room_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <resultMap id="tableMap" type="cn.hotel.hotelserver.model.room.RoomType" extends="BaseResultMap" />
+  <select id="select" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from room_type
+  </select>
+  <select id="table" resultMap="tableMap">
+    select <include refid="Base_Column_List"/> from room_type
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from room_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.hotel.hotelserver.model.room.RoomType" >
+    insert into room_type (name, number,
+      spec_id)
+    values (#{name,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER},
+      #{specId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hotel.hotelserver.model.room.RoomType" >
+    insert into room_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="specId != null" >
+        spec_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="specId != null" >
+        #{specId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hotel.hotelserver.model.room.RoomType" >
+    update room_type
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="specId != null" >
+        spec_id = #{specId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hotel.hotelserver.model.room.RoomType" >
+    update room_type
+    set name = #{name,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      spec_id = #{specId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
