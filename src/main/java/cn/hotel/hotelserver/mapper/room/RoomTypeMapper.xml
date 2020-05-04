@@ -80,4 +80,7 @@
       spec_id = #{specId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <update id="applySpec" parameterType="map">
+      update room_type set spec_id = #{specId} where id = #{id}
+    </update>
 </mapper>

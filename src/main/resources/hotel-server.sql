@@ -11,7 +11,7 @@
  Target Server Version : 80018
  File Encoding         : 65001
 
- Date: 09/04/2020 22:45:35
+ Date: 04/05/2020 21:14:47
 */
 
 SET NAMES utf8mb4;
@@ -48,15 +48,16 @@ CREATE TABLE `admin_role`  (
   `aid` int(11) NOT NULL,
   `rid` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin_role
 -- ----------------------------
 INSERT INTO `admin_role` VALUES (17, 6, 2);
-INSERT INTO `admin_role` VALUES (54, 7, 2);
-INSERT INTO `admin_role` VALUES (60, 1, 1);
 INSERT INTO `admin_role` VALUES (65, 2, 2);
+INSERT INTO `admin_role` VALUES (66, 1, 1);
+INSERT INTO `admin_role` VALUES (67, 1, 2);
+INSERT INTO `admin_role` VALUES (68, 7, 2);
 
 -- ----------------------------
 -- Table structure for menu
@@ -94,7 +95,7 @@ CREATE TABLE `permission`  (
   `enabled` tinyint(1) NOT NULL,
   `list_order` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -117,6 +118,23 @@ INSERT INTO `permission` VALUES (16, 15, '查看权限树', '/basic/permission/t
 INSERT INTO `permission` VALUES (17, 15, '添加权限', '/basic/permission/create', 1, 999);
 INSERT INTO `permission` VALUES (18, 15, '更新权限', '/basic/permission/update', 1, 999);
 INSERT INTO `permission` VALUES (19, 15, '删除权限', '/basic/permission/delete', 1, 999);
+INSERT INTO `permission` VALUES (21, 0, '客房管理', '/room', 1, 999);
+INSERT INTO `permission` VALUES (22, 21, '房间管理', '/room/room', 1, 999);
+INSERT INTO `permission` VALUES (23, 22, '添加房间', '/room/room/create', 1, 999);
+INSERT INTO `permission` VALUES (24, 22, '更新房间', '/room/room/update', 1, 999);
+INSERT INTO `permission` VALUES (28, 22, '查看房间数据', '/room/room/table', 1, 998);
+INSERT INTO `permission` VALUES (29, 22, '删除房间', '/room/room/delete', 1, 999);
+INSERT INTO `permission` VALUES (30, 21, '房型管理', '/room/type', 1, 999);
+INSERT INTO `permission` VALUES (31, 30, '查看房型数据', '/room/type/table', 1, 999);
+INSERT INTO `permission` VALUES (32, 30, '添加房型', '/room/type/create', 1, 999);
+INSERT INTO `permission` VALUES (33, 30, '更新房型', '/room/type/update', 1, 999);
+INSERT INTO `permission` VALUES (34, 30, '应用房型规格', '/room/type/applySpec', 1, 999);
+INSERT INTO `permission` VALUES (35, 30, '删除房型', '/room/type/delete', 1, 999);
+INSERT INTO `permission` VALUES (36, 21, '房型规格管理', '/room/spec', 1, 999);
+INSERT INTO `permission` VALUES (37, 36, '查看房型规格数据', '/room/spec/table', 1, 999);
+INSERT INTO `permission` VALUES (38, 36, '添加房型规格', '/room/spec/create', 1, 999);
+INSERT INTO `permission` VALUES (39, 36, '更新房型规格', '/room/spec/update', 1, 999);
+INSERT INTO `permission` VALUES (40, 36, '删除房型规格', '/room/spec/delete', 1, 999);
 
 -- ----------------------------
 -- Table structure for role
@@ -166,7 +184,7 @@ CREATE TABLE `role_permission`  (
   `rid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role_permission
@@ -180,5 +198,59 @@ INSERT INTO `role_permission` VALUES (129, 2, 10);
 INSERT INTO `role_permission` VALUES (130, 2, 11);
 INSERT INTO `role_permission` VALUES (131, 2, 12);
 INSERT INTO `role_permission` VALUES (132, 2, 13);
+
+-- ----------------------------
+-- Table structure for room
+-- ----------------------------
+DROP TABLE IF EXISTS `room`;
+CREATE TABLE `room`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '房间名称',
+  `floor` int(255) NOT NULL COMMENT '楼层',
+  `type_id` int(11) NOT NULL COMMENT '房型id',
+  `status` int(1) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of room
+-- ----------------------------
+INSERT INTO `room` VALUES (1, '101', 1, 1, 1);
+
+-- ----------------------------
+-- Table structure for room_spec
+-- ----------------------------
+DROP TABLE IF EXISTS `room_spec`;
+CREATE TABLE `room_spec`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `type_id` int(11) NOT NULL COMMENT '房型id',
+  `price` json NULL COMMENT '价格配置',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of room_spec
+-- ----------------------------
+INSERT INTO `room_spec` VALUES (1, '标准单人房（正常价）', 1, '{\"day\": 10000, \"hour\": 3000, \"deposit\": 200, \"dayContinueHour\": 1000}');
+INSERT INTO `room_spec` VALUES (2, '1231', 1, '{\"day\": 20000, \"hour\": 2000, \"deposit\": 100, \"dayContinueHour\": 400}');
+
+-- ----------------------------
+-- Table structure for room_type
+-- ----------------------------
+DROP TABLE IF EXISTS `room_type`;
+CREATE TABLE `room_type`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '房型名称',
+  `number` int(11) NOT NULL COMMENT '床位',
+  `spec_id` int(11) NULL DEFAULT NULL COMMENT '应用规格id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of room_type
+-- ----------------------------
+INSERT INTO `room_type` VALUES (1, '标准单人房', 1, 2);
+INSERT INTO `room_type` VALUES (2, '标准双人房', 2, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

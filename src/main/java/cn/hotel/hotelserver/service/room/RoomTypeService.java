@@ -1,6 +1,8 @@
 package cn.hotel.hotelserver.service.room;
 
+import cn.hotel.hotelserver.mapper.room.RoomSpecMapper;
 import cn.hotel.hotelserver.mapper.room.RoomTypeMapper;
+import cn.hotel.hotelserver.model.room.RoomSpec;
 import cn.hotel.hotelserver.model.room.RoomType;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,6 +17,9 @@ public class RoomTypeService {
 
     @Autowired
     RoomTypeMapper roomTypeMapper;
+
+    @Autowired
+    RoomSpecMapper roomSpecMapper;
 
     /**
      * 分页查询
@@ -56,5 +61,25 @@ public class RoomTypeService {
      */
     public List<RoomType> select() {
         return roomTypeMapper.select();
+    }
+
+    /**
+     * 应用规格
+     * @param typeId
+     * @param specId
+     */
+    public void applySpec(Integer typeId, Integer specId) {
+        RoomType roomType = this.find(typeId);
+        RoomSpec roomSpec = roomSpecMapper.selectByPrimaryKey(specId);
+        roomType.setSpecId(roomSpec.getId());
+        roomTypeMapper.applySpec(typeId, specId);
+    }
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delete(Integer id) {
+        roomTypeMapper.deleteByPrimaryKey(id);
     }
 }

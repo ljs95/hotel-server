@@ -22,4 +22,6 @@ public interface RoomTypeMapper {
     IPage<RoomType> table(Page<RoomType> page);
 
     List<RoomType> select();
+
+    int applySpec(Integer id, Integer specId);
 }
