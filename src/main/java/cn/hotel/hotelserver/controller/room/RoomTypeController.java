@@ -17,8 +17,8 @@ public class RoomTypeController {
     RoomTypeService roomTypeService;
 
     @GetMapping("/table")
-    public ResponseVo table(Integer page, Integer size) {
-        Page<RoomType> roomTypePage = new Page<>(page, size);
+    public ResponseVo table(Integer current, Integer size) {
+        Page<RoomType> roomTypePage = new Page<>(current, size);
         PaginationResult table = roomTypeService.table(roomTypePage);
         return ResponseVo.successData(table);
     }

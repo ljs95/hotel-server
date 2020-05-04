@@ -1,6 +1,6 @@
 package cn.hotel.hotelserver.model.room;
 
-import cn.hotel.hotelserver.model.room.abstracts.RoomStatusEnum;
+import cn.hotel.hotelserver.model.room.enums.RoomStatusEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

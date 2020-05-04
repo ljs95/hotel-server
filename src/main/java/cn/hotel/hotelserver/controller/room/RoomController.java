@@ -2,7 +2,7 @@ package cn.hotel.hotelserver.controller.room;
 
 import cn.hotel.hotelserver.model.room.Room;
 import cn.hotel.hotelserver.model.room.RoomType;
-import cn.hotel.hotelserver.model.room.abstracts.RoomStatusEnum;
+import cn.hotel.hotelserver.model.room.enums.RoomStatusEnum;
 import cn.hotel.hotelserver.service.room.RoomService;
 import cn.hotel.hotelserver.service.room.RoomTypeService;
 import cn.hotel.hotelserver.util.ResponseVo;

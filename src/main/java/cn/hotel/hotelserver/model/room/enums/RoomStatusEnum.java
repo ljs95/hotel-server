@@ -1,4 +1,4 @@
-package cn.hotel.hotelserver.model.room.abstracts;
+package cn.hotel.hotelserver.model.room.enums;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
