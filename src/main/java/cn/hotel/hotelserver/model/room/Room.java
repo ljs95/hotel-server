@@ -1,11 +1,12 @@
 package cn.hotel.hotelserver.model.room;
 
-import cn.hotel.hotelserver.model.room.enums.RoomStatusEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Data
 public class Room {
@@ -32,6 +33,36 @@ public class Room {
     }
 
     public String getStatusDesc() {
-        return RoomStatusEnum.getName(this.status);
+        return statusEnum.getStatusList().get(this.status);
+    }
+
+    /**
+     * 房间状态枚举类
+     */
+    public enum statusEnum {
+        // 空闲状态
+        STATUS_FREE("空闲", 1),
+        // 使用中状态
+        STATUS_USE("使用中", 2),
+        // 打扫中状态
+        STATUS_CLEAN("打扫中", 3);
+
+        private final String name;
+        private final Integer status;
+        private final static Map<Integer, String> MAP = new LinkedHashMap<>();
+        static {
+            for (statusEnum statusEnum : statusEnum.values()) {
+                MAP.put(statusEnum.status, statusEnum.name);
+            }
+        }
+
+        statusEnum(String name, Integer status) {
+            this.name = name;
+            this.status = status;
+        }
+
+        public static Map<Integer, String> getStatusList() {
+            return MAP;
+        }
     }
 }

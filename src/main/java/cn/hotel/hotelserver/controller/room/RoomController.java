@@ -2,7 +2,6 @@ package cn.hotel.hotelserver.controller.room;
 
 import cn.hotel.hotelserver.model.room.Room;
 import cn.hotel.hotelserver.model.room.RoomType;
-import cn.hotel.hotelserver.model.room.enums.RoomStatusEnum;
 import cn.hotel.hotelserver.service.room.RoomService;
 import cn.hotel.hotelserver.service.room.RoomTypeService;
 import cn.hotel.hotelserver.util.ResponseVo;
@@ -29,9 +28,9 @@ public class RoomController {
     @GetMapping("/index")
     public ResponseVo index() {
         List<RoomType> roomTypeList = roomTypeService.select();
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(2);
         map.put("roomTypeList", roomTypeList);
-        map.put("statusList", RoomStatusEnum.getStatusList());
+        map.put("statusList", Room.statusEnum.getStatusList());
         return ResponseVo.successData(map);
     }
 

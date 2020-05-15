@@ -36,6 +36,6 @@ public class RoomSpec {
      * 价格元转分
      */
     public void priceYuanToFen() {
-        this.price.toFen();
+        this.price.YuanToFen();
     }
 }

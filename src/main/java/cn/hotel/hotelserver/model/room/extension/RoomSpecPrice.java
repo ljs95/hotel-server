@@ -35,7 +35,7 @@ public class RoomSpecPrice {
     /**
      * 元转分
      */
-    public void toFen() {
+    public void YuanToFen() {
         BigDecimal multiplyNumber = new BigDecimal(100);
         this.deposit = this.deposit.multiply(multiplyNumber);
         this.day = this.day.multiply(multiplyNumber);
