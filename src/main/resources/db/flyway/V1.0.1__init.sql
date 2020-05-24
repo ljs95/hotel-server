@@ -11,7 +11,7 @@
  Target Server Version : 80018
  File Encoding         : 65001
 
- Date: 04/05/2020 21:14:47
+ Date: 24/05/2020 12:06:51
 */
 
 SET NAMES utf8mb4;
@@ -95,7 +95,7 @@ CREATE TABLE `permission`  (
   `enabled` tinyint(1) NOT NULL,
   `list_order` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -215,7 +215,7 @@ CREATE TABLE `room`  (
 -- ----------------------------
 -- Records of room
 -- ----------------------------
-INSERT INTO `room` VALUES (1, '101', 1, 1, 1);
+INSERT INTO `room` VALUES (1, '101', 1, 1, 2);
 
 -- ----------------------------
 -- Table structure for room_spec
@@ -227,13 +227,13 @@ CREATE TABLE `room_spec`  (
   `type_id` int(11) NOT NULL COMMENT '房型id',
   `price` json NULL COMMENT '价格配置',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of room_spec
 -- ----------------------------
-INSERT INTO `room_spec` VALUES (1, '标准单人房（正常价）', 1, '{\"day\": 10000, \"hour\": 3000, \"deposit\": 200, \"dayContinueHour\": 1000}');
-INSERT INTO `room_spec` VALUES (2, '1231', 1, '{\"day\": 20000, \"hour\": 2000, \"deposit\": 100, \"dayContinueHour\": 400}');
+INSERT INTO `room_spec` VALUES (1, '标准单人房（正常价）', 1, '{\"day\": 10000, \"hour\": 3000, \"deposit\": 10050.0, \"dayContinueHour\": 1000}');
+INSERT INTO `room_spec` VALUES (2, '1231', 1, '{\"day\": 20000, \"hour\": 2000, \"deposit\": 9900, \"dayContinueHour\": 400}');
 
 -- ----------------------------
 -- Table structure for room_type

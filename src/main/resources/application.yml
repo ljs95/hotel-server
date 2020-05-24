@@ -1,9 +1,17 @@
 spring:
   datasource:
-    url: jdbc:mysql://192.168.138.132:3306/hotel-server?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.56.3:3306/hotel-server?useUnicode=true&characterEncoding=UTF-8
     username: johnson
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
+  flyway:
+    url: jdbc:mysql://192.168.56.3:3306/hotel-server?useUnicode=true&characterEncoding=UTF-8
+    schemas: hotel-server
+    table: flyway_version_history
+    user: johnson
+    password: 123456
+    enabled: true
+    locations: classpath:db/flyway
 
 mybatis:
   configuration:
