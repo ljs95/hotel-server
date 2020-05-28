@@ -5,6 +5,8 @@ import cn.hotel.hotelserver.model.room.Room;
 import cn.hotel.hotelserver.vo.room.RoomPage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 public interface RoomMapper{
     int deleteByPrimaryKey(Integer id);
 
@@ -17,4 +19,6 @@ public interface RoomMapper{
     int updateByPrimaryKey(Room record);
 
     IPage<Room> table(RoomPage page);
+
+    List<Room> selectRoomsByTypeId(Integer typeId);
 }

@@ -36,6 +36,10 @@ public class Room {
         return statusEnum.getStatusList().get(this.status);
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     /**
      * 房间状态枚举类
      */

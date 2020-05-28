@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoomService {
 
@@ -33,5 +35,9 @@ public class RoomService {
 
     public void deleteByPrimaryKey(Integer id) {
         roomMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<Room> selectRoomsByTypeId(Integer typeId) {
+        return roomMapper.selectRoomsByTypeId(typeId);
     }
 }

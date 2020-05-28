@@ -32,7 +32,7 @@
             <result column="rt_spec_id" property="specId"/>
         </association>
     </resultMap>
-    <select id="table" resultMap="withTypeMap">
+    <sql id="withTypeSql">
         SELECT
         r.*,
         rt.id AS rt_id,
@@ -42,6 +42,9 @@
         FROM
         room AS r
         LEFT JOIN room_type AS rt ON r.type_id = rt.id
+    </sql>
+    <select id="table" resultMap="withTypeMap">
+        <include refid="withTypeSql" />
         <where>
             <if test="typeId != null and typeId != ''">
                 and r.type_id = #{typeId}
@@ -50,6 +53,9 @@
                 and r.status = #{status}
             </if>
         </where>
+    </select>
+    <select id="selectRoomsByTypeId" resultMap="withTypeMap">
+        <include refid="withTypeSql" /> where r.type_id = #{typeId}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from room
