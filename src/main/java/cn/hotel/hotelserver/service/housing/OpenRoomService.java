@@ -6,6 +6,7 @@ import cn.hotel.hotelserver.model.housing.HousingBill;
 import cn.hotel.hotelserver.model.room.Room;
 import cn.hotel.hotelserver.model.room.RoomSchedule;
 import cn.hotel.hotelserver.model.room.RoomSpec;
+import cn.hotel.hotelserver.service.housing.allocator.RoomAllocator;
 import cn.hotel.hotelserver.service.housing.bo.OpenRoomBo;
 import cn.hotel.hotelserver.service.room.RoomScheduleService;
 import cn.hotel.hotelserver.service.room.RoomService;
@@ -25,8 +26,6 @@ import org.springframework.transaction.TransactionStatus;
 public class OpenRoomService {
 
     private OpenRoomBo openRoomBo = new OpenRoomBo();
-
-    private final static Object openLock = new Object();
 
     @Autowired
     HousingBillMapper housingBillMapper;
@@ -69,7 +68,7 @@ public class OpenRoomService {
         openRoomBo.setEndTime(endTime.getTime());
     }
 
-    public HousingBill openRoom(OpenRoomVo vo) {
+    public HousingBill openRoom(OpenRoomVo vo) throws InterruptedException {
         HousingBill bill = null;
         if (vo.isOpenDayRoom()) {
             return openDayRoom(vo);
@@ -78,7 +77,7 @@ public class OpenRoomService {
         return bill;
     }
 
-    public HousingBill openDayRoom(OpenRoomVo vo) {
+    public HousingBill openDayRoom(OpenRoomVo vo) throws InterruptedException {
         init(vo);
         Integer roomId = openRoomBo.getRoom().getId();
         Long startTime = openRoomBo.getStartTime();
@@ -86,6 +85,7 @@ public class OpenRoomService {
 
         // 开启事务
         TransactionStatus transaction = dataSourceTransactionManager.getTransaction(transactionDefinition);
+        RoomAllocator instance = RoomAllocator.getInstance();
         try {
             // 1.创建入住账单
             HousingBill bill = (new HousingBill())
@@ -95,27 +95,28 @@ public class OpenRoomService {
                     .setRoomId(roomId);
             housingBillMapper.insertSelective(bill);
 
-            synchronized (openLock) {
-                // 2.验证房间排期
-                if (roomScheduleService.isConflict(roomId, startTime, endTime)) {
-                    throw new CustomException("房间排期冲突");
-                }
-
-                // 3.创建房间排期
-                RoomSchedule roomSchedule = (new RoomSchedule())
-                        .setRoomId(roomId)
-                        .setStartTime(startTime)
-                        .setEndTime(endTime);
-                roomScheduleService.insert(roomSchedule);
-
-                // 提交事务
-                dataSourceTransactionManager.commit(transaction);
+            instance.lock(roomId);
+            // 2.验证房间排期
+            if (roomScheduleService.isConflict(roomId, startTime, endTime)) {
+                throw new CustomException("房间排期冲突");
             }
+
+            // 3.创建房间排期
+            RoomSchedule roomSchedule = (new RoomSchedule())
+                    .setRoomId(roomId)
+                    .setStartTime(startTime)
+                    .setEndTime(endTime);
+            roomScheduleService.insert(roomSchedule);
+
+            // 提交事务
+            dataSourceTransactionManager.commit(transaction);
             return bill;
         }catch (Exception e) {
             // 回滚事务
             dataSourceTransactionManager.rollback(transaction);
             throw e;
+        } finally {
+            instance.unlock(roomId);
         }
     }
 }

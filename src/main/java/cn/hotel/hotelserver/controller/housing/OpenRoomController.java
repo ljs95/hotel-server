@@ -48,7 +48,7 @@ public class OpenRoomController {
      * @return
      */
     @PostMapping("/openDay")
-    public ResponseVo openDayRoom(@RequestBody OpenRoomVo openRoomVo) {
+    public ResponseVo openDayRoom(@RequestBody OpenRoomVo openRoomVo) throws InterruptedException {
         openRoomVo.setMode(RoomSpec.MODE_DAY);
         HousingBill bill = openRoomService.openRoom(openRoomVo);
         return ResponseVo.success("开房成功，账单号：" + bill.getSerial());

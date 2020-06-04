@@ -12,6 +12,7 @@ spring:
     password: 123456
     enabled: true
     locations: classpath:db/flyway
+    clean-disabled: true
 
 mybatis:
   configuration:
