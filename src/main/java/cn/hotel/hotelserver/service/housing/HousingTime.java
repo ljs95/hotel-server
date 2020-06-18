@@ -21,13 +21,23 @@ public class HousingTime {
     }
 
     /**
-     * 规范化开始时间
+     * 规范化全日房开始时间
      * @return
      */
     public static DateTime normDayStartTime(Long startTime) {
         DateTime zeroTime = getZeroTime(startTime);
         zeroTime.offset(DateField.HOUR_OF_DAY, dayLeaveTime);
         return zeroTime;
+    }
+
+    /**
+     * 规范化钟点房开始时间
+     * @return
+     */
+    public static DateTime normHourStartTime(Long startTime) {
+        return DateUtil.date(startTime)
+                .setField(DateField.SECOND, 0)
+                .setField(DateField.MILLISECOND, 0);
     }
 
 }

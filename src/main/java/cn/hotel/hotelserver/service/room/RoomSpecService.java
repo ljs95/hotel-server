@@ -1,9 +1,11 @@
 package cn.hotel.hotelserver.service.room;
 
+import cn.hotel.hotelserver.exception.CustomException;
 import cn.hotel.hotelserver.mapper.room.RoomSpecMapper;
 import cn.hotel.hotelserver.model.room.RoomSpec;
 import cn.hotel.hotelserver.vo.PaginationResult;
 import cn.hotel.hotelserver.vo.room.RoomSpecPage;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,11 @@ public class RoomSpecService {
     }
 
     public RoomSpec selectByPrimaryKey(Integer id) {
-        return roomSpecMapper.selectByPrimaryKey(id);
+        RoomSpec roomSpec = roomSpecMapper.selectByPrimaryKey(id);
+        if (ObjectUtil.isNull(roomSpec)) {
+            throw new CustomException("房间规格不存在");
+        }
+        return roomSpec;
     }
 
     public List<RoomSpec> select() {

@@ -34,6 +34,10 @@ public class RoomSpec {
         return id;
     }
 
+    public RoomSpecPrice getPrice() {
+        return price;
+    }
+
     /**
      * 价格元转分
      */
@@ -41,19 +45,17 @@ public class RoomSpec {
         this.price.YuanToFen();
     }
 
-    public final static Integer MODE_DAY = 1;
-    public final static Integer MODE_HOUR = 2;
     public enum modeEnum {
         // 全日房
-        STATUS_FREE("全日房", MODE_DAY),
+        MODE_DAY("全日房", 1),
         // 钟点房
-        STATUS_USE("钟点房", MODE_HOUR);
+        MODE_HOUR("钟点房", 2);
 
         private final String name;
         private final Integer mode;
         private final static Map<Integer, String> MAP = new LinkedHashMap<>();
         static {
-            for (RoomSpec.modeEnum modeEnum : modeEnum.values()) {
+            for (modeEnum modeEnum : modeEnum.values()) {
                 MAP.put(modeEnum.mode, modeEnum.name);
             }
         }
@@ -65,6 +67,10 @@ public class RoomSpec {
 
         public static Map<Integer, String> getModeList() {
             return MAP;
+        }
+
+        public Integer getMode() {
+            return mode;
         }
     }
 }

@@ -40,6 +40,10 @@ public class Room {
         return id;
     }
 
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
     /**
      * 房间状态枚举类
      */

@@ -10,6 +10,8 @@ public class HousingBill {
 
     private Integer roomId;
 
+    private Integer roomScheduleId;
+
     private Long startTime;
 
     private Long entTime;
@@ -33,6 +35,11 @@ public class HousingBill {
 
     public HousingBill setRoomId(Integer roomId) {
         this.roomId = roomId;
+        return this;
+    }
+
+    public HousingBill setRoomScheduleId(Integer roomScheduleId) {
+        this.roomScheduleId = roomScheduleId;
         return this;
     }
 

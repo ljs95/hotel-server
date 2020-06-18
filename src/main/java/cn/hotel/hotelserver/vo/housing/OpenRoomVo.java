@@ -1,11 +1,7 @@
 package cn.hotel.hotelserver.vo.housing;
 
-import cn.hotel.hotelserver.exception.CustomException;
 import cn.hotel.hotelserver.model.room.RoomSpec;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Map;
 
 
 @Setter
@@ -19,13 +15,9 @@ public class OpenRoomVo {
     /**
      * 入住方式 全日房/钟点房
      */
-    private Integer mode;
+    private RoomSpec.modeEnum mode;
 
-    public void setMode(Integer mode) {
-        Map<Integer, String> modeList = RoomSpec.modeEnum.getModeList();
-        if(StringUtils.isEmpty(modeList.get(mode))) {
-            throw new CustomException("入住方式有误");
-        }
+    public void setMode(RoomSpec.modeEnum mode) {
         this.mode = mode;
     }
 
@@ -41,11 +33,15 @@ public class OpenRoomVo {
         return roomId;
     }
 
-    public Integer getMode() {
+    public RoomSpec.modeEnum getMode() {
         return mode;
     }
 
+    /**
+     * 是否开全日房
+     * @return
+     */
     public boolean isOpenDayRoom() {
-        return this.getMode().equals(RoomSpec.MODE_DAY);
+        return this.getMode().equals(RoomSpec.modeEnum.MODE_DAY);
     }
 }

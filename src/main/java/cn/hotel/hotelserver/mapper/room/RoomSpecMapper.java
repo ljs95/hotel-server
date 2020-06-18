@@ -4,9 +4,11 @@ package cn.hotel.hotelserver.mapper.room;
 import cn.hotel.hotelserver.model.room.RoomSpec;
 import cn.hotel.hotelserver.vo.room.RoomSpecPage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface RoomSpecMapper {
     int deleteByPrimaryKey(Integer id);
 

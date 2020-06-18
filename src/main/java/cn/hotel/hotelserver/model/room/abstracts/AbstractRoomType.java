@@ -21,4 +21,20 @@ public abstract class AbstractRoomType {
     public void setSpecId(Integer specId) {
         this.specId = specId;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public Integer getSpecId() {
+        return specId;
+    }
 }

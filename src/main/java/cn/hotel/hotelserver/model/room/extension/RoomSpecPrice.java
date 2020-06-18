@@ -32,6 +32,22 @@ public class RoomSpecPrice {
     @NotNull(message = "钟点房价格不能为空")
     private BigDecimal hour;
 
+    public BigDecimal getDeposit() {
+        return deposit;
+    }
+
+    public BigDecimal getDay() {
+        return day;
+    }
+
+    public BigDecimal getDayContinueHour() {
+        return dayContinueHour;
+    }
+
+    public BigDecimal getHour() {
+        return hour;
+    }
+
     /**
      * 元转分
      */

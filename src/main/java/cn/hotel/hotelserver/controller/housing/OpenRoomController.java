@@ -49,7 +49,19 @@ public class OpenRoomController {
      */
     @PostMapping("/openDay")
     public ResponseVo openDayRoom(@RequestBody OpenRoomVo openRoomVo) throws InterruptedException {
-        openRoomVo.setMode(RoomSpec.MODE_DAY);
+        openRoomVo.setMode(RoomSpec.modeEnum.MODE_DAY);
+        HousingBill bill = openRoomService.openRoom(openRoomVo);
+        return ResponseVo.success("开房成功，账单号：" + bill.getSerial());
+    }
+
+    /**
+     * 开钟点房
+     * @param openRoomVo
+     * @return
+     */
+    @PostMapping("/openHour")
+    public ResponseVo openHourRoom(@RequestBody OpenRoomVo openRoomVo) throws InterruptedException {
+        openRoomVo.setMode(RoomSpec.modeEnum.MODE_HOUR);
         HousingBill bill = openRoomService.openRoom(openRoomVo);
         return ResponseVo.success("开房成功，账单号：" + bill.getSerial());
     }

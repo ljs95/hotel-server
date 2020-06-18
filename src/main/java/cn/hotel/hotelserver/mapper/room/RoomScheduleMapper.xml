@@ -25,7 +25,7 @@
     delete from room_schedule
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="cn.hotel.hotelserver.model.room.RoomSchedule" >
+  <insert id="insert" parameterType="cn.hotel.hotelserver.model.room.RoomSchedule" useGeneratedKeys="true" keyProperty="id">
     insert into room_schedule (room_id, start_time,
       end_time)
     values (#{roomId,jdbcType=INTEGER}, #{startTime,jdbcType=INTEGER},

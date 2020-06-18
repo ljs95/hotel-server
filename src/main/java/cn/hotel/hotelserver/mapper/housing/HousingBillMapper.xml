@@ -42,7 +42,7 @@
   <insert id="insertSelective" parameterType="cn.hotel.hotelserver.model.housing.HousingBill" >
     insert into housing_bill
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      serial, room_id, start_time, ent_time,
+      serial, room_id, room_schedule_id, start_time, ent_time,
       <if test="intoTime != null" >
         into_time,
       </if>
@@ -57,7 +57,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-        #{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER},
+        #{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{roomScheduleId,jdbcType=INTEGER},
         #{startTime,jdbcType=INTEGER}, #{entTime,jdbcType=INTEGER},
       <if test="intoTime != null" >
         #{intoTime,jdbcType=INTEGER},
@@ -76,9 +76,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="cn.hotel.hotelserver.model.housing.HousingBill" >
     update housing_bill
     <set >
-      <if test="roomId != null" >
-        room_id = #{roomId,jdbcType=INTEGER},
-      </if>
       <if test="startTime != null" >
         start_time = #{startTime,jdbcType=INTEGER},
       </if>
