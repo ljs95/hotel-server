@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hotel.mainserver.mapper.room.RoomMapper">
+    <resultMap id="BaseResultMap" type="cn.hotel.mainserver.model.room.Room">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="floor" property="floor" jdbcType="INTEGER"/>
+        <result column="type_id" property="typeId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, floor, type_id, status
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="withTypeMap" parameterType="java.lang.Integer">
+    SELECT
+        r.*,
+        rt.id AS rt_id,
+        rt.NAME AS rt_name,
+        rt.number AS rt_number,
+        rt.spec_id AS rt_spec_id
+    FROM
+        room AS r
+        LEFT JOIN room_type AS rt ON r.type_id = rt.id
+        where r.id = #{id}
+    </select>
+
+    <resultMap id="withTypeMap" type="cn.hotel.mainserver.model.room.Room" extends="BaseResultMap">
+        <association property="roomType" javaType="cn.hotel.mainserver.model.room.RoomType">
+            <id column="rt_id" property="id"/>
+            <result column="rt_name" property="name"/>
+            <result column="rt_number" property="number"/>
+            <result column="rt_spec_id" property="specId"/>
+        </association>
+    </resultMap>
+    <sql id="withTypeSql">
+        SELECT
+        r.*,
+        rt.id AS rt_id,
+        rt.NAME AS rt_name,
+        rt.number AS rt_number,
+        rt.spec_id AS rt_spec_id
+        FROM
+        room AS r
+        LEFT JOIN room_type AS rt ON r.type_id = rt.id
+    </sql>
+    <select id="table" resultMap="withTypeMap">
+        <include refid="withTypeSql" />
+        <where>
+            <if test="typeId != null and typeId != ''">
+                and r.type_id = #{typeId}
+            </if>
+            <if test="status != null and status != ''">
+                and r.status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="selectRoomsByTypeId" resultMap="withTypeMap">
+        <include refid="withTypeSql" /> where r.type_id = #{typeId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="cn.hotel.mainserver.model.room.Room">
+    insert into room (name, floor,
+      type_id, status)
+    values (#{name,jdbcType=VARCHAR}, #{floor,jdbcType=INTEGER},
+      #{typeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+  </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.hotel.mainserver.model.room.Room">
+        update room
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="floor != null">
+                floor = #{floor,jdbcType=INTEGER},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                type_id = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.hotel.mainserver.model.room.Room">
+    update room
+    set name = #{name,jdbcType=VARCHAR},
+      floor = #{floor,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

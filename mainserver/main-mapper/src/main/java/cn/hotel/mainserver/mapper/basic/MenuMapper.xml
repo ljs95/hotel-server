@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hotel.mainserver.mapper.basic.MenuMapper">
+    <resultMap id="BaseResultMap" type="cn.hotel.mainserver.model.basic.Menu">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="pid" property="pid" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="component" property="component" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, pid, name, path, component, title, icon, enabled
+    </sql>
+    <insert id="insert" parameterType="cn.hotel.mainserver.model.basic.Menu">
+        insert into menu(pid, path, name, component, title, icon, enabled)
+        values(#{pid}, #{path}, #{name}, #{component}, #{title}, #{icon}, #{enabled})
+    </insert>
+    <resultMap id="MenusByAdminId" type="cn.hotel.mainserver.model.basic.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="cn.hotel.mainserver.model.basic.Menu">
+            <id column="id2" property="id" jdbcType="INTEGER"/>
+            <result column="pid2" property="pid" jdbcType="INTEGER"/>
+            <result column="name2" property="name" jdbcType="VARCHAR"/>
+            <result column="path2" property="path" jdbcType="VARCHAR"/>
+            <result column="component2" property="component" jdbcType="VARCHAR"/>
+            <result column="title2" property="title" jdbcType="VARCHAR"/>
+            <result column="icon2" property="icon" jdbcType="VARCHAR"/>
+            <result column="enabled2" property="enabled" jdbcType="BIT"/>
+        </collection>
+    </resultMap>
+    <select id="getMenusByAdminId" resultMap="MenusByAdminId">
+        SELECT
+            m.*,
+            m2.id AS id2,
+            m2.pid AS pid2,
+            m2.path AS path2,
+            m2.NAME AS name2,
+            m2.component AS component2,
+            m2.title AS title2,
+            m2.icon AS icon2,
+            m2.enabled AS enabled2
+        FROM
+            menu m,
+            menu m2,
+            role_menu rm,
+            admin_role ar
+        WHERE
+         m.id = m2.pid
+            AND rm.mid = m2.id
+            AND rm.rid = ar.rid
+            AND ar.aid = #{adminId}
+            AND m.enabled = 1
+            AND m2.enabled = 1
+    </select>
+</mapper>

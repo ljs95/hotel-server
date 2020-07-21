@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hotel.mainserver.mapper.housing.HousingBillMapper" >
+  <resultMap id="BaseResultMap" type="cn.hotel.mainserver.model.housing.HousingBill" >
+    <id column="serial" property="serial" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="INTEGER" />
+    <result column="ent_time" property="entTime" jdbcType="INTEGER" />
+    <result column="into_time" property="intoTime" jdbcType="INTEGER" />
+    <result column="out_time" property="outTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.hotel.mainserver.model.housing.HousingBill" extends="BaseResultMap" >
+    <result column="snap" property="snap" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    serial, room_id, start_time, ent_time, into_time, out_time, create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    snap
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from housing_bill
+    where serial = #{serial,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from housing_bill
+    where serial = #{serial,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
+    insert into housing_bill (serial, room_id, start_time, 
+      ent_time, into_time, out_time, 
+      create_time, snap)
+    values (#{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{startTime,jdbcType=INTEGER}, 
+      #{entTime,jdbcType=INTEGER}, #{intoTime,jdbcType=INTEGER}, #{outTime,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=INTEGER}, #{snap,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
+    insert into housing_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      serial, room_id, room_schedule_id, start_time, ent_time,
+      <if test="intoTime != null" >
+        into_time,
+      </if>
+      <if test="outTime != null" >
+        out_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="snap != null" >
+        snap,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{roomScheduleId,jdbcType=INTEGER},
+        #{startTime,jdbcType=INTEGER}, #{entTime,jdbcType=INTEGER},
+      <if test="intoTime != null" >
+        #{intoTime,jdbcType=INTEGER},
+      </if>
+      <if test="outTime != null" >
+        #{outTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="snap != null" >
+        #{snap,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
+    update housing_bill
+    <set >
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="entTime != null" >
+        ent_time = #{entTime,jdbcType=INTEGER},
+      </if>
+      <if test="intoTime != null" >
+        into_time = #{intoTime,jdbcType=INTEGER},
+      </if>
+      <if test="outTime != null" >
+        out_time = #{outTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="snap != null" >
+        snap = #{snap,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where serial = #{serial,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
+    update housing_bill
+    set room_id = #{roomId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=INTEGER},
+      ent_time = #{entTime,jdbcType=INTEGER},
+      into_time = #{intoTime,jdbcType=INTEGER},
+      out_time = #{outTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      snap = #{snap,jdbcType=LONGVARCHAR}
+    where serial = #{serial,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
+    update housing_bill
+    set room_id = #{roomId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=INTEGER},
+      ent_time = #{entTime,jdbcType=INTEGER},
+      into_time = #{intoTime,jdbcType=INTEGER},
+      out_time = #{outTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where serial = #{serial,jdbcType=VARCHAR}
+  </update>
+</mapper>

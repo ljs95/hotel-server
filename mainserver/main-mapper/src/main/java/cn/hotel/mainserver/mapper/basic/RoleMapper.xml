@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hotel.mainserver.mapper.basic.RoleMapper">
+    <resultMap id="BaseResultMap" type="cn.hotel.mainserver.model.basic.Role">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="alias" property="alias" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, alias, remark
+    </sql>
+    <insert id="insert" parameterType="cn.hotel.mainserver.model.basic.Role" useGeneratedKeys="true" keyProperty="id">
+        insert into role(name, alias, remark) values(#{name}, #{alias}, #{remark})
+    </insert>
+    <insert id="insertPermission" parameterType="map">
+        insert into role_permission(rid, pid) values
+        <foreach collection="permissionIds" item="permissionId" separator=",">
+            (#{id}, #{permissionId})
+        </foreach>
+    </insert>
+    <update id="update" parameterType="cn.hotel.mainserver.model.basic.Role">
+        update role
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="alias != null and alias != ''">
+                alias = #{alias},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="integer">
+        delete from role where id = #{id}
+    </delete>
+    <delete id="deleteAdminRoleByRoleId" parameterType="integer">
+        delete from admin_role where rid = #{id}
+    </delete>
+    <delete id="deletePermission" parameterType="integer">
+        delete from role_permission where rid = #{roleId}
+    </delete>
+    <select id="getRolesByAdminId" resultMap="BaseResultMap">
+        SELECT
+            r.*
+        FROM
+            admin a,
+            admin_role ar,
+            role r
+        WHERE
+            a.id = ar.aid
+            AND ar.rid = r.id
+            AND a.id = #{adminId}
+    </select>
+    <select id="table" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from role
+        <where>
+            <if test="name != null and name != ''">
+                and name like CONCAT(#{name}, '%')
+            </if>
+            <if test="alias != null and alias != ''">
+                and alias like CONCAT(#{alias}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from role where id = #{id}
+    </select>
+    <select id="all" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from role
+    </select>
+</mapper>
