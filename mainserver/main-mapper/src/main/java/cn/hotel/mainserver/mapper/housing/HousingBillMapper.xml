@@ -5,7 +5,7 @@
     <id column="serial" property="serial" jdbcType="VARCHAR" />
     <result column="room_id" property="roomId" jdbcType="INTEGER" />
     <result column="start_time" property="startTime" jdbcType="INTEGER" />
-    <result column="ent_time" property="entTime" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="INTEGER" />
     <result column="into_time" property="intoTime" jdbcType="INTEGER" />
     <result column="out_time" property="outTime" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
@@ -14,7 +14,7 @@
     <result column="snap" property="snap" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    serial, room_id, start_time, ent_time, into_time, out_time, create_time
+    serial, room_id, start_time, end_time, into_time, out_time, create_time
   </sql>
   <sql id="Blob_Column_List" >
     snap
@@ -33,16 +33,16 @@
   </delete>
   <insert id="insert" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
     insert into housing_bill (serial, room_id, start_time, 
-      ent_time, into_time, out_time, 
+      end_time, into_time, out_time, 
       create_time, snap)
     values (#{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{startTime,jdbcType=INTEGER}, 
-      #{entTime,jdbcType=INTEGER}, #{intoTime,jdbcType=INTEGER}, #{outTime,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=INTEGER}, #{intoTime,jdbcType=INTEGER}, #{outTime,jdbcType=INTEGER}, 
       #{createTime,jdbcType=INTEGER}, #{snap,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.hotel.mainserver.model.housing.HousingBill" >
     insert into housing_bill
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      serial, room_id, room_schedule_id, start_time, ent_time,
+      serial, room_id, room_schedule_id, start_time, end_time,
       <if test="intoTime != null" >
         into_time,
       </if>
@@ -58,7 +58,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
         #{serial,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{roomScheduleId,jdbcType=INTEGER},
-        #{startTime,jdbcType=INTEGER}, #{entTime,jdbcType=INTEGER},
+        #{startTime,jdbcType=INTEGER}, #{endTime,jdbcType=INTEGER},
       <if test="intoTime != null" >
         #{intoTime,jdbcType=INTEGER},
       </if>
@@ -79,8 +79,8 @@
       <if test="startTime != null" >
         start_time = #{startTime,jdbcType=INTEGER},
       </if>
-      <if test="entTime != null" >
-        ent_time = #{entTime,jdbcType=INTEGER},
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=INTEGER},
       </if>
       <if test="intoTime != null" >
         into_time = #{intoTime,jdbcType=INTEGER},
@@ -101,7 +101,7 @@
     update housing_bill
     set room_id = #{roomId,jdbcType=INTEGER},
       start_time = #{startTime,jdbcType=INTEGER},
-      ent_time = #{entTime,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=INTEGER},
       into_time = #{intoTime,jdbcType=INTEGER},
       out_time = #{outTime,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=INTEGER},
@@ -112,7 +112,7 @@
     update housing_bill
     set room_id = #{roomId,jdbcType=INTEGER},
       start_time = #{startTime,jdbcType=INTEGER},
-      ent_time = #{entTime,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=INTEGER},
       into_time = #{intoTime,jdbcType=INTEGER},
       out_time = #{outTime,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=INTEGER}

@@ -14,7 +14,7 @@ public class HousingBill {
 
     private Long startTime;
 
-    private Long entTime;
+    private Long endTime;
 
     private Long intoTime;
 
@@ -48,8 +48,8 @@ public class HousingBill {
         return this;
     }
 
-    public HousingBill setEntTime(Long entTime) {
-        this.entTime = entTime;
+    public HousingBill setEndTime(Long endTime) {
+        this.endTime = endTime;
         return this;
     }
 

@@ -1,5 +1,6 @@
 package cn.hotel.mainserver.service.housing;
 
+import cn.hotel.mainserver.common.bean.CustomBeanUtils;
 import cn.hotel.mainserver.common.exception.CustomException;
 import cn.hotel.mainserver.mapper.housing.HousingBillMapper;
 import cn.hotel.mainserver.mapper.housing.HousingOperationMapper;
@@ -8,19 +9,13 @@ import cn.hotel.mainserver.model.housing.HousingBill;
 import cn.hotel.mainserver.model.housing.HousingOperation;
 import cn.hotel.mainserver.model.housing.HousingPrice;
 import cn.hotel.mainserver.model.housing.snap.HousingOperationSnap;
-import cn.hotel.mainserver.model.room.Room;
 import cn.hotel.mainserver.model.room.RoomSchedule;
-import cn.hotel.mainserver.model.room.RoomSpec;
 import cn.hotel.mainserver.model.room.extension.RoomSpecPrice;
-import cn.hotel.mainserver.service.OpenRoomVo;
 import cn.hotel.mainserver.service.housing.allocator.RoomAllocator;
 import cn.hotel.mainserver.service.housing.billing.BillingRoomPrice;
 import cn.hotel.mainserver.service.housing.bo.OpenRoomBo;
 import cn.hotel.mainserver.service.room.RoomScheduleService;
-import cn.hotel.mainserver.service.room.RoomService;
-import cn.hotel.mainserver.service.room.RoomSpecService;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
@@ -35,7 +30,7 @@ import java.math.BigDecimal;
 @Service
 public class OpenRoomService {
 
-    private OpenRoomBo openRoomBo = new OpenRoomBo();
+    private OpenRoomBo openRoomBo;
 
     private final RoomAllocator instance = RoomAllocator.getInstance();
 
@@ -52,61 +47,21 @@ public class OpenRoomService {
     RoomScheduleService roomScheduleService;
 
     @Autowired
-    RoomSpecService roomSpecService;
-
-    @Autowired
-    RoomService roomService;
-
-    @Autowired
     DataSourceTransactionManager dataSourceTransactionManager;
     @Autowired
     TransactionDefinition transactionDefinition;
 
-    public void init(OpenRoomVo vo) {
-        initTime(vo);
-        // 开房房间
-        Room room = roomService.selectByPrimaryKey(vo.getRoomId());
-        openRoomBo.setRoom(room);
-        openRoomBo.setMode(vo.getMode());
-        RoomSpec roomSpec = roomSpecService.selectByPrimaryKey(openRoomBo.getRoomType().getSpecId());
-        openRoomBo.setRoomSpec(roomSpec);
-    }
+    public HousingBill openRoom(OpenRoomBo.Builder builder) throws InterruptedException {
+        openRoomBo = builder.build();
 
-    /**
-     * 初始化时间
-     * @param vo
-     */
-    private void initTime(OpenRoomVo vo) {
-        // 开始时间
-        DateTime startTime;
-        // 结束时间
-        DateTime endTime;
-
-        // 是否开全日房
-        if (vo.isOpenDayRoom()) {
-            startTime = HousingTime.normDayStartTime(vo.getStartTime());
-            endTime = DateUtil.offsetDay(startTime.toJdkDate(), vo.getTime());
-        } else {
-            startTime = HousingTime.normHourStartTime(vo.getStartTime());
-            endTime = DateUtil.offsetHour(startTime.toJdkDate(), vo.getTime());
-        }
-
-        openRoomBo.setStartTime(startTime.getTime());
-        openRoomBo.setEndTime(endTime.getTime());
-        openRoomBo.setTime(vo.getTime());
-    }
-
-    public HousingBill openRoom(OpenRoomVo vo) throws InterruptedException {
-        init(vo);
         HousingBill bill;
         TransactionStatus transaction = dataSourceTransactionManager.getTransaction(transactionDefinition);
         try {
-            instance.lock(vo.getRoomId());
-            if (vo.isOpenDayRoom()) {
-                bill = openDayRoom();
-            } else {
-                bill = openHourRoom();
-            }
+            instance.lock(openRoomBo.getRoomId());
+
+            // 开房
+            bill = openRoom();
+
             // 提交事务
             dataSourceTransactionManager.commit(transaction);
         } catch (Exception e) {
@@ -114,7 +69,7 @@ public class OpenRoomService {
             dataSourceTransactionManager.rollback(transaction);
             throw e;
         } finally {
-            instance.unlock(vo.getRoomId());
+            instance.unlock(openRoomBo.getRoomId());
         }
 
         return bill;
@@ -124,26 +79,7 @@ public class OpenRoomService {
      * 开房
      * @return HousingBill
      */
-    private HousingBill openDayRoom() {
-        // 1.锁定房间排期
-        Integer roomScheduleId = lockRoomSchedule();
-
-        // 2.创建入住账单
-        HousingBill bill = createBill(roomScheduleId);
-
-        // 3.创建入住操作
-        HousingOperation operation = addOperation(bill.getSerial());
-
-        // 4.创建账单金额
-        createPrice(bill.getSerial(), operation);
-        return bill;
-    }
-
-    /**
-     * 开房
-     * @return HousingBill
-     */
-    private HousingBill openHourRoom()  {
+    private HousingBill openRoom() {
         // 1.锁定房间排期
         Integer roomScheduleId = lockRoomSchedule();
 
@@ -169,10 +105,8 @@ public class OpenRoomService {
         }
 
         // 2.创建房间排期
-        RoomSchedule roomSchedule = (new RoomSchedule())
-                .setRoomId(openRoomBo.getRoomId())
-                .setStartTime(openRoomBo.getStartTime())
-                .setEndTime(openRoomBo.getEndTime());
+        RoomSchedule roomSchedule = new RoomSchedule();
+        BeanUtils.copyProperties(openRoomBo, roomSchedule);
         return roomScheduleService.insert(roomSchedule);
     }
 
@@ -181,14 +115,12 @@ public class OpenRoomService {
      * @return
      */
     private HousingBill createBill(Integer roomScheduleId) {
-        HousingBill bill = (new HousingBill())
+        HousingBill housingBill = CustomBeanUtils.setProperties(openRoomBo, HousingBill::new)
                 .createSerial()
-                .setStartTime(openRoomBo.getStartTime())
-                .setEntTime(openRoomBo.getEndTime())
-                .setRoomId(openRoomBo.getRoomId())
                 .setRoomScheduleId(roomScheduleId);
-        housingBillMapper.insertSelective(bill);
-        return bill;
+
+        housingBillMapper.insertSelective(housingBill);
+        return housingBill;
     }
 
     /**
@@ -199,15 +131,12 @@ public class OpenRoomService {
         HousingOperationSnap snap = (new HousingOperationSnap())
                 .setPrice(specPrice.getDay(), specPrice.getDayContinueHour(), specPrice.getHour());
 
-        HousingOperation housingOperation = (new HousingOperation())
+        HousingOperation housingOperation = CustomBeanUtils.setProperties(openRoomBo, HousingOperation::new)
                 .setBillSerial(billSerial)
                 .setType(HousingOperation.typeEnum.TYPE_OPEN)
-                .setMode(openRoomBo.getMode())
-                .setTime(openRoomBo.getTime())
                 .setSnap(snap)
-                .setStartTime(openRoomBo.getStartTime())
-                .setEndTime(openRoomBo.getEndTime())
                 .setCreateTime();
+
         operationMapper.insertSelective(housingOperation);
 
         return housingOperation;
@@ -223,7 +152,9 @@ public class OpenRoomService {
         BillingRoomPrice billingRoomPrice = (new BillingRoomPrice(housingOperation))
                 .run();
 
-        BigDecimal deposit = openRoomBo.getRoomSpec().getPrice().getDeposit();
+        BigDecimal deposit = openRoomBo.getRoomSpec()
+                .getPrice()
+                .getDeposit();
         HousingPrice housingPrice = (new HousingPrice())
                 .setBillSerial(billSerial)
                 .setDeposit(deposit)

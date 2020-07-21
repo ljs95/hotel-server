@@ -1,8 +1,7 @@
-package cn.hotel.mainserver.service;
+package cn.hotel.mainserver.vo.housing;
 
 import cn.hotel.mainserver.model.room.RoomSpec;
 import lombok.Setter;
-
 
 @Setter
 public class OpenRoomVo {

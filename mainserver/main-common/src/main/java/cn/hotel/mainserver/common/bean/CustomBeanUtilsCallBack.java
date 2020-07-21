@@ -5,7 +5,7 @@ package cn.hotel.mainserver.common.bean;
  * @date 2019/12/30/ 16:26:16
  */
 @FunctionalInterface
-public interface ColaBeanUtilsCallBack<S, T> {
+public interface CustomBeanUtilsCallBack<S, T> {
 
     void callBack(S t, T s);
 }

@@ -1,6 +1,6 @@
 package cn.hotel.mainserver.controller.basic;
 
-import cn.hotel.mainserver.common.bean.ColaBeanUtils;
+import cn.hotel.mainserver.common.bean.CustomBeanUtils;
 import cn.hotel.mainserver.common.validates.ICreateValid;
 import cn.hotel.mainserver.common.validates.IUpdateValid;
 import cn.hotel.mainserver.model.basic.Menu;
@@ -72,7 +72,7 @@ public class RoleController {
     @PostMapping("/update")
     public ResponseVo update(@RequestBody @Validated(value = {IUpdateValid.class}) RoleVo vo) {
         Role role = new Role();
-        ColaBeanUtils.copyProperties(vo, role);
+        CustomBeanUtils.copyProperties(vo, role);
         roleService.update(role);
         return ResponseVo.success("更新成功");
     }
@@ -80,7 +80,7 @@ public class RoleController {
     @PutMapping("/create")
     public ResponseVo create(@RequestBody @Validated(value = {ICreateValid.class}) RoleVo vo) {
         Role role = new Role();
-        ColaBeanUtils.copyProperties(vo, role);
+        CustomBeanUtils.copyProperties(vo, role);
         roleService.create(role);
         return ResponseVo.success("创建成功");
     }

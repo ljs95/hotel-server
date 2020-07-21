@@ -1,6 +1,6 @@
 package cn.hotel.mainserver.controller.basic;
 
-import cn.hotel.mainserver.common.bean.ColaBeanUtils;
+import cn.hotel.mainserver.common.bean.CustomBeanUtils;
 import cn.hotel.mainserver.common.validates.ICreateValid;
 import cn.hotel.mainserver.common.validates.IUpdateValid;
 import cn.hotel.mainserver.model.basic.Admin;
@@ -76,7 +76,7 @@ public class AdminController {
     public ResponseVo find(@PathVariable Integer id) {
         Admin admin = adminService.findById(id);
         AdminVo adminVo = new AdminVo();
-        ColaBeanUtils.copyProperties(admin, adminVo);
+        CustomBeanUtils.copyProperties(admin, adminVo);
 
         List<Integer> roleIds = new ArrayList<>(admin.getRoles().size());
         admin.getRoles().forEach((role -> {
@@ -90,7 +90,7 @@ public class AdminController {
     @PutMapping("/create")
     public ResponseVo create(@RequestBody @Validated(value = {ICreateValid.class}) AdminVo adminVo) {
         Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
+        CustomBeanUtils.copyProperties(adminVo, admin);
         adminService.create(admin, adminVo.getRoleIds());
         return ResponseVo.success("添加成功");
     }
@@ -98,7 +98,7 @@ public class AdminController {
     @PostMapping(value = "/update")
     public ResponseVo update(@RequestBody @Validated(value = {IUpdateValid.class}) AdminVo adminVo) {
         Admin admin = new Admin();
-        ColaBeanUtils.copyProperties(adminVo, admin);
+        CustomBeanUtils.copyProperties(adminVo, admin);
         adminService.updateAndRole(admin, adminVo.getRoleIds());
         return ResponseVo.success("更新成功");
     }

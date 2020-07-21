@@ -1,6 +1,6 @@
 package cn.hotel.mainserver.controller.basic;
 
-import cn.hotel.mainserver.common.bean.ColaBeanUtils;
+import cn.hotel.mainserver.common.bean.CustomBeanUtils;
 import cn.hotel.mainserver.model.basic.Permission;
 import cn.hotel.mainserver.service.basic.PermissionService;
 import cn.hotel.mainserver.util.response.ResponseVo;
@@ -30,7 +30,7 @@ public class PermissionController {
     @PutMapping("/create")
     public ResponseVo create(@RequestBody PermissionVo permissionVo) {
         Permission permission = new Permission();
-        ColaBeanUtils.copyProperties(permissionVo, permission);
+        CustomBeanUtils.copyProperties(permissionVo, permission);
         permissionService.create(permission);
         return ResponseVo.success("创建成功");
     }
@@ -38,7 +38,7 @@ public class PermissionController {
     @PostMapping("/update")
     public ResponseVo update(@RequestBody PermissionVo permissionVo) {
         Permission permission = new Permission();
-        ColaBeanUtils.copyProperties(permissionVo, permission);
+        CustomBeanUtils.copyProperties(permissionVo, permission);
         permissionService.update(permission);
         return ResponseVo.success("更新成功");
     }

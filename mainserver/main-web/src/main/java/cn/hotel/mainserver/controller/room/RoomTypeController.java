@@ -1,6 +1,6 @@
 package cn.hotel.mainserver.controller.room;
 
-import cn.hotel.mainserver.common.bean.ColaBeanUtils;
+import cn.hotel.mainserver.common.bean.CustomBeanUtils;
 import cn.hotel.mainserver.model.room.RoomSpec;
 import cn.hotel.mainserver.model.room.RoomType;
 import cn.hotel.mainserver.pageination.PaginationResult;
@@ -49,7 +49,7 @@ public class RoomTypeController {
     @PutMapping("/create")
     public ResponseVo create(@RequestBody RoomTypeVo roomTypeVo) {
         RoomType roomType = new RoomType();
-        ColaBeanUtils.copyProperties(roomTypeVo, roomType);
+        CustomBeanUtils.copyProperties(roomTypeVo, roomType);
         roomTypeService.create(roomType);
         return ResponseVo.success("创建成功");
     }
@@ -57,7 +57,7 @@ public class RoomTypeController {
     @PostMapping("/update")
     public ResponseVo update(@RequestBody RoomTypeVo roomTypeVo) {
         RoomType roomType = new RoomType();
-        ColaBeanUtils.copyProperties(roomTypeVo, roomType);
+        CustomBeanUtils.copyProperties(roomTypeVo, roomType);
         roomTypeService.update(roomType);
         return ResponseVo.success("创建成功");
     }

@@ -9,7 +9,7 @@ CREATE TABLE `housing_bill`  (
   `room_id` int(11) NOT NULL COMMENT '房间id',
   `room_schedule_id` int(11) NOT NULL COMMENT '房间排期id',
   `start_time` bigint(20) NOT NULL COMMENT '开始时间',
-  `ent_time` bigint(20) NOT NULL COMMENT '结束时间',
+  `end_time` bigint(20) NOT NULL COMMENT '结束时间',
   `snap` json NULL COMMENT '快照信息',
   `into_time` bigint(20) NULL DEFAULT NULL COMMENT '入住时间',
   `out_time` bigint(20) NULL DEFAULT NULL COMMENT '退房时间',
